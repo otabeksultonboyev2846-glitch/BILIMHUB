@@ -1,0 +1,4052 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#10172a">
+<title>BILIMHUB — Ta'lim platformasi</title>
+<style>
+/* =========================================================
+   BILIMHUB — SINGLE FILE EDITION
+   Barcha dizayn, mantiq va ma'lumotlar bitta HTML faylda.
+   ========================================================= */
+
+/* ---------- 01. DESIGN TOKENS ---------- */
+:root {
+  --bg: #f4f6fb;
+  --surface: #ffffff;
+  --surface-2: #f8f9fd;
+  --text: #182033;
+  --muted: #758099;
+  --line: #e7eaf2;
+  --primary: #6258e8;
+  --primary-dark: #4d43ca;
+  --primary-soft: #eeedff;
+  --secondary: #12a98b;
+  --secondary-soft: #e5faf4;
+  --warning: #e5a12b;
+  --warning-soft: #fff5df;
+  --danger: #e45269;
+  --danger-soft: #fff0f2;
+  --info: #3886df;
+  --info-soft: #eaf3ff;
+  --shadow: 0 12px 35px rgba(29, 39, 74, .07);
+  --radius: 18px;
+  --radius-sm: 11px;
+  --sidebar: 258px;
+}
+
+body.dark {
+  --bg: #101522;
+  --surface: #192234;
+  --surface-2: #202b40;
+  --text: #edf1fb;
+  --muted: #a3aec4;
+  --line: #2d3950;
+  --primary: #958cff;
+  --primary-dark: #786ef0;
+  --primary-soft: #302d58;
+  --secondary-soft: #173e3a;
+  --warning-soft: #46371e;
+  --danger-soft: #492a35;
+  --info-soft: #1d3555;
+  --shadow: 0 12px 35px rgba(0, 0, 0, .18);
+}
+
+/* ---------- 02. RESET ---------- */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.55;
+  transition: background .2s, color .2s;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: .55;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ---------- 03. GLOBAL COMPONENTS ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  padding: 10px 15px;
+  font-weight: 700;
+  transition: transform .15s, background .15s, box-shadow .15s;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+  box-shadow: 0 5px 15px rgba(98, 88, 232, .18);
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+}
+
+.btn-soft {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.btn-plain {
+  background: var(--surface-2);
+  color: var(--text);
+  border-color: var(--line);
+}
+
+.btn-danger {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.btn-success {
+  background: var(--secondary-soft);
+  color: var(--secondary);
+}
+
+.btn-warning {
+  background: var(--warning-soft);
+  color: var(--warning);
+}
+
+.btn-small {
+  padding: 7px 10px;
+  font-size: 12px;
+  border-radius: 8px;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.icon-btn {
+  width: 39px;
+  height: 39px;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.field {
+  margin-bottom: 15px;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--muted);
+}
+
+.field input,
+.field select,
+.field textarea,
+.search-input {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px 13px;
+  outline: none;
+  background: var(--surface);
+  color: var(--text);
+  transition: border .15s, box-shadow .15s;
+}
+
+.field textarea {
+  min-height: 125px;
+  resize: vertical;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus,
+.search-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-soft);
+}
+
+.field small {
+  display: block;
+  color: var(--muted);
+  margin-top: 5px;
+  font-size: 11px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 15px;
+}
+
+.form-grid .full {
+  grid-column: 1 / -1;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.small {
+  font-size: 12px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  border-radius: 30px;
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.pill.green {
+  background: var(--secondary-soft);
+  color: var(--secondary);
+}
+
+.pill.red {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.pill.yellow {
+  background: var(--warning-soft);
+  color: var(--warning);
+}
+
+.pill.blue {
+  background: var(--info-soft);
+  color: var(--info);
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+
+.card + .card {
+  margin-top: 15px;
+}
+
+.card-title {
+  margin: 0 0 13px;
+  font-size: 16px;
+  font-weight: 850;
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 18px;
+}
+
+.section-head h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.section-head p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  position: relative;
+  overflow: hidden;
+  min-height: 130px;
+}
+
+.stat-card .stat-icon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  background: var(--primary-soft);
+  font-size: 21px;
+}
+
+.stat-card .stat-value {
+  margin-top: 12px;
+  font-size: 27px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.stat-card .stat-label {
+  margin-top: 7px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 15px;
+}
+
+.subject-grid,
+.lesson-grid,
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.subject-card,
+.lesson-card {
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+  color: var(--text);
+  text-align: left;
+  transition: transform .18s, border .18s, box-shadow .18s;
+}
+
+.subject-card:hover,
+.lesson-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--primary);
+  box-shadow: var(--shadow);
+}
+
+.subject-emoji {
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+
+.subject-card h3,
+.lesson-card h3 {
+  margin: 0 0 6px;
+  font-size: 15px;
+}
+
+.subject-card p,
+.lesson-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.lesson-card .lesson-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 13px;
+}
+
+.progress {
+  height: 8px;
+  overflow: hidden;
+  border-radius: 20px;
+  background: var(--surface-2);
+}
+
+.progress > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--primary), #9b76f2);
+}
+
+.table-wrap {
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--surface);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+}
+
+th,
+td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: middle;
+  font-size: 12px;
+}
+
+th {
+  background: var(--surface-2);
+  color: var(--muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+tr:last-child td {
+  border-bottom: 0;
+}
+
+.empty-state {
+  padding: 35px 15px;
+  text-align: center;
+  border: 1px dashed var(--line);
+  border-radius: 14px;
+  color: var(--muted);
+  background: var(--surface);
+}
+
+.empty-state .empty-icon {
+  display: block;
+  font-size: 35px;
+  margin-bottom: 8px;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.toolbar .search-input {
+  max-width: 310px;
+  margin-right: auto;
+}
+
+.divider {
+  height: 1px;
+  background: var(--line);
+  margin: 17px 0;
+}
+
+.notice {
+  padding: 12px 14px;
+  border-radius: 11px;
+  background: var(--info-soft);
+  color: var(--info);
+  font-size: 12px;
+  margin-bottom: 15px;
+}
+
+.notice.warning {
+  background: var(--warning-soft);
+  color: var(--warning);
+}
+
+.notice.danger {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+/* ---------- 04. AUTHENTICATION ---------- */
+.auth-screen {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1.1fr .9fr;
+  background: var(--surface);
+}
+
+.auth-brand-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(30px, 6vw, 80px);
+  color: white;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(255,255,255,.18), transparent 28%),
+    linear-gradient(145deg, #29245f, #6258e8 60%, #8876f2);
+}
+
+.brand-logo {
+  font-size: 25px;
+  font-weight: 950;
+  letter-spacing: -.04em;
+}
+
+.brand-logo span {
+  color: #b9ffeb;
+}
+
+.auth-hero {
+  max-width: 560px;
+}
+
+.auth-hero h1 {
+  margin: 0 0 18px;
+  font-size: clamp(35px, 5vw, 60px);
+  line-height: 1.04;
+  letter-spacing: -.05em;
+}
+
+.auth-hero p {
+  max-width: 450px;
+  color: rgba(255,255,255,.78);
+  font-size: 16px;
+}
+
+.auth-points {
+  display: grid;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.auth-point {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  color: rgba(255,255,255,.92);
+}
+
+.auth-side {
+  display: grid;
+  place-items: center;
+  padding: 25px;
+  background: var(--bg);
+}
+
+.auth-box {
+  width: 100%;
+  max-width: 430px;
+  padding: 30px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.auth-box h2 {
+  margin: 0 0 5px;
+  font-size: 25px;
+}
+
+.auth-box > p {
+  margin: 0 0 22px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.auth-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 4px;
+  margin-bottom: 20px;
+  border-radius: 11px;
+  background: var(--surface-2);
+}
+
+.auth-tabs button {
+  padding: 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.auth-tabs button.active {
+  background: var(--surface);
+  color: var(--primary);
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+}
+
+.auth-footer {
+  margin-top: 18px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.password-wrap {
+  position: relative;
+}
+
+.password-wrap input {
+  padding-right: 48px;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--surface-2);
+  color: var(--muted);
+}
+
+/* ---------- 05. APPLICATION SHELL ---------- */
+#appScreen {
+  min-height: 100vh;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 0 25px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.topbar-left,
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.topbar-brand {
+  font-size: 20px;
+  font-weight: 950;
+  color: var(--primary);
+  letter-spacing: -.04em;
+}
+
+.topbar-brand span {
+  color: var(--text);
+}
+
+.topbar-search {
+  width: min(32vw, 340px);
+}
+
+.topbar-search input {
+  margin: 0;
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.user-chip {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.avatar {
+  width: 37px;
+  height: 37px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-weight: 900;
+}
+
+.user-chip strong {
+  display: block;
+  font-size: 12px;
+}
+
+.user-chip small {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.app-layout {
+  display: flex;
+  min-height: calc(100vh - 68px);
+}
+
+.sidebar {
+  position: sticky;
+  top: 68px;
+  width: var(--sidebar);
+  height: calc(100vh - 68px);
+  overflow-y: auto;
+  flex: 0 0 var(--sidebar);
+  padding: 18px 13px;
+  border-right: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.nav-label {
+  margin: 16px 10px 7px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .1em;
+}
+
+.nav-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 11px 12px;
+  margin: 3px 0;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--muted);
+  text-align: left;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.nav-btn:hover,
+.nav-btn.active {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.nav-btn .nav-icon {
+  width: 22px;
+  text-align: center;
+  font-size: 16px;
+}
+
+.sidebar-bottom {
+  margin-top: 25px;
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--surface-2);
+}
+
+.main-content {
+  min-width: 0;
+  flex: 1;
+  padding: clamp(18px, 3vw, 32px);
+}
+
+.page {
+  display: none;
+  max-width: 1450px;
+  margin: 0 auto;
+  animation: fadeIn .2s ease;
+}
+
+.page.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- 06. MODALS, TOASTS, DROPDOWNS ---------- */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(9, 13, 28, .62);
+  backdrop-filter: blur(4px);
+}
+
+.modal-box {
+  width: min(680px, 100%);
+  max-height: 92vh;
+  overflow: auto;
+  padding: 23px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--surface);
+  box-shadow: 0 25px 80px rgba(0,0,0,.25);
+}
+
+.modal-box.wide {
+  width: min(900px, 100%);
+}
+
+.modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 18px;
+}
+
+.modal-head h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.modal-close {
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 9px;
+  background: var(--surface-2);
+  color: var(--text);
+  font-size: 18px;
+}
+
+.toast-stack {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 100;
+  display: grid;
+  gap: 9px;
+}
+
+.toast {
+  min-width: 230px;
+  max-width: min(380px, calc(100vw - 36px));
+  padding: 13px 16px;
+  border-radius: 12px;
+  background: #202a40;
+  color: white;
+  box-shadow: var(--shadow);
+  animation: fadeIn .2s ease;
+  font-size: 12px;
+}
+
+.toast.error {
+  background: #a8324b;
+}
+
+.toast.success {
+  background: #087d68;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 40;
+  min-width: 190px;
+  padding: 7px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.dropdown-menu button {
+  width: 100%;
+  padding: 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text);
+  text-align: left;
+  font-size: 12px;
+}
+
+.dropdown-menu button:hover {
+  background: var(--surface-2);
+}
+
+/* ---------- 07. LESSON READER AND QUIZ ---------- */
+.reader-content {
+  line-height: 1.85;
+  overflow-wrap: anywhere;
+}
+
+.reader-content h1,
+.reader-content h2,
+.reader-content h3 {
+  line-height: 1.3;
+}
+
+.reader-content img {
+  max-height: 420px;
+  border-radius: 12px;
+  object-fit: contain;
+}
+
+.reader-content pre {
+  overflow: auto;
+  padding: 14px;
+  border-radius: 10px;
+  background: var(--surface-2);
+}
+
+.reader-content blockquote {
+  margin: 15px 0;
+  padding: 10px 15px;
+  border-left: 4px solid var(--primary);
+  background: var(--primary-soft);
+}
+
+.quiz-question {
+  padding: 16px;
+  margin-bottom: 13px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.quiz-question h4 {
+  margin: 0 0 12px;
+}
+
+.quiz-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 9px 10px;
+  margin: 6px 0;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  cursor: pointer;
+}
+
+.quiz-option:hover {
+  border-color: var(--primary);
+}
+
+.quiz-option input {
+  width: auto;
+  margin: 3px 0 0;
+}
+
+.quiz-result {
+  padding: 20px;
+  border-radius: 13px;
+  background: var(--secondary-soft);
+  color: var(--secondary);
+  text-align: center;
+}
+
+.quiz-result strong {
+  display: block;
+  font-size: 35px;
+}
+
+/* ---------- 08. RESPONSIVE ---------- */
+@media (max-width: 1050px) {
+  .stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .content-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .auth-screen {
+    grid-template-columns: .8fr 1fr;
+  }
+
+  .auth-brand-panel {
+    padding: 35px;
+  }
+}
+
+@media (max-width: 760px) {
+  .auth-screen {
+    display: block;
+  }
+
+  .auth-brand-panel {
+    min-height: 230px;
+    padding: 25px;
+  }
+
+  .auth-hero h1 {
+    font-size: 34px;
+  }
+
+  .auth-points,
+  .auth-brand-panel footer {
+    display: none;
+  }
+
+  .auth-side {
+    min-height: calc(100vh - 230px);
+    padding: 15px;
+  }
+
+  .auth-box {
+    padding: 22px;
+  }
+
+  .topbar {
+    height: 60px;
+    padding: 0 12px;
+  }
+
+  .topbar-search {
+    display: none;
+  }
+
+  .topbar-brand {
+    font-size: 17px;
+  }
+
+  .user-chip > div:nth-child(2) {
+    display: none;
+  }
+
+  .app-layout {
+    display: block;
+    min-height: calc(100vh - 60px);
+  }
+
+  .sidebar {
+    position: sticky;
+    top: 60px;
+    z-index: 15;
+    width: 100%;
+    height: auto;
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    padding: 7px;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .nav-label,
+  .sidebar-bottom {
+    display: none;
+  }
+
+  .nav-btn {
+    width: auto;
+    flex: 0 0 auto;
+    padding: 9px 11px;
+    white-space: nowrap;
+  }
+
+  .main-content {
+    padding: 17px 12px;
+  }
+
+  .stat-grid {
+    gap: 8px;
+  }
+
+  .stat-card {
+    min-height: 112px;
+    padding: 13px;
+  }
+
+  .stat-card .stat-value {
+    font-size: 23px;
+  }
+
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid .full {
+    grid-column: auto;
+  }
+
+  .section-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .toolbar .search-input {
+    max-width: none;
+    flex-basis: 100%;
+  }
+}
+
+@media (max-width: 390px) {
+  .stat-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .subject-grid,
+  .lesson-grid,
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .btn {
+    padding: 9px 11px;
+  }
+}
+
+/* ---------- 09. PRINT ---------- */
+@media print {
+  .topbar,
+  .sidebar,
+  .btn,
+  .toolbar,
+  .modal-backdrop {
+    display: none !important;
+  }
+
+  body {
+    background: white;
+    color: black;
+  }
+
+  .main-content {
+    padding: 0;
+  }
+
+  .page {
+    display: block !important;
+  }
+
+  .card {
+    box-shadow: none;
+    break-inside: avoid;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- =======================================================
+     AUTHENTICATION SCREEN
+     ======================================================= -->
+<section id="authScreen" class="auth-screen">
+  <div class="auth-brand-panel">
+    <div class="brand-logo">✦ BILIM<span>HUB</span></div>
+    <div class="auth-hero">
+      <h1>Bilim sari yangi qadam.</h1>
+      <p>O'rganing, mashq qiling, natijangizni kuzating va maqsadlaringizga yaqinlashing.</p>
+      <div class="auth-points">
+        <div class="auth-point">✓ Barcha fanlar bir joyda</div>
+        <div class="auth-point">✓ Interaktiv test va natijalar</div>
+        <div class="auth-point">✓ Shaxsiy o'quv kabineti</div>
+      </div>
+    </div>
+    <footer class="small">BILIMHUB · Mustaqil ta'lim platformasi</footer>
+  </div>
+
+  <div class="auth-side">
+    <div class="auth-box">
+      <h2 id="authTitle">Xush kelibsiz!</h2>
+      <p id="authSubtitle">Hisobingizga kiring yoki yangi hisob yarating.</p>
+      <div class="auth-tabs">
+        <button id="loginTab" class="active" type="button" onclick="showAuthMode('login')">Kirish</button>
+        <button id="registerTab" type="button" onclick="showAuthMode('register')">Ro'yxatdan o'tish</button>
+      </div>
+
+      <form id="loginForm">
+        <div class="field">
+          <label for="loginIdentity">Email yoki login</label>
+          <input id="loginIdentity" autocomplete="username" required placeholder="Email yoki login">
+        </div>
+        <div class="field">
+          <label for="loginPassword">Parol</label>
+          <div class="password-wrap">
+            <input id="loginPassword" type="password" autocomplete="current-password" required placeholder="Parolingiz">
+            <button class="password-toggle" type="button" onclick="togglePassword('loginPassword', this)">◉</button>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-block" type="submit">Tizimga kirish →</button>
+      </form>
+
+      <form id="registerForm" class="hidden">
+        <div class="field">
+          <label for="regName">Ism va familiya</label>
+          <input id="regName" required minlength="2" maxlength="70" placeholder="Ismingiz va familiyangiz">
+        </div>
+        <div class="field">
+          <label for="regEmail">Email</label>
+          <input id="regEmail" type="email" required maxlength="120" placeholder="email@example.com">
+        </div>
+        <div class="field">
+          <label for="regGrade">Sinf</label>
+          <select id="regGrade" required>
+            <option value="">Sinfni tanlang</option>
+            <option value="5">5-sinf</option>
+            <option value="6">6-sinf</option>
+            <option value="7">7-sinf</option>
+            <option value="8">8-sinf</option>
+            <option value="9">9-sinf</option>
+            <option value="10">10-sinf</option>
+            <option value="11">11-sinf</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="regPassword">Parol (kamida 8 belgi)</label>
+          <input id="regPassword" type="password" minlength="8" maxlength="100" required autocomplete="new-password">
+        </div>
+        <button class="btn btn-primary btn-block" type="submit">Hisob yaratish →</button>
+      </form>
+
+      <div class="auth-footer">
+        Administrator kirishi ham shu sahifada alohida himoyalangan.
+        <br>© 2026 BILIMHUB
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =======================================================
+     MAIN APPLICATION
+     ======================================================= -->
+<section id="appScreen" class="hidden">
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-brand">✦ BILIM<span>HUB</span></div>
+      <div class="topbar-search">
+        <input id="globalSearch" placeholder="Dars yoki fan qidirish..." oninput="globalSearch(this.value)">
+      </div>
+    </div>
+    <div class="topbar-right">
+      <button class="icon-btn" type="button" title="Mavzuni almashtirish" onclick="toggleTheme()">◐</button>
+      <button class="icon-btn" type="button" title="E'lonlar" onclick="navigate('announcements')">♢</button>
+      <div class="user-chip">
+        <div class="avatar" id="topAvatar">B</div>
+        <div>
+          <strong id="topName">Foydalanuvchi</strong>
+          <small id="topRole">O'quvchi</small>
+        </div>
+      </div>
+      <button class="btn btn-danger btn-small" type="button" onclick="logout()">Chiqish</button>
+    </div>
+  </header>
+
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="nav-label">ASOSIY</div>
+      <button class="nav-btn active" data-page="dashboard" onclick="navigate('dashboard')"><span class="nav-icon">⌂</span> Bosh sahifa</button>
+      <button class="nav-btn" data-page="subjects" onclick="navigate('subjects')"><span class="nav-icon">▦</span> Fanlar</button>
+      <button class="nav-btn" data-page="lessons" onclick="navigate('lessons')"><span class="nav-icon">▤</span> Darslar</button>
+      <button class="nav-btn" data-page="quizzes" onclick="navigate('quizzes')"><span class="nav-icon">✓</span> Testlar</button>
+      <button class="nav-btn" data-page="myprogress" onclick="navigate('myprogress')"><span class="nav-icon">◴</span> Mening natijalarim</button>
+      <button class="nav-btn" data-page="favorites" onclick="navigate('favorites')"><span class="nav-icon">♡</span> Sevimlilar</button>
+      <button class="nav-btn" data-page="announcements" onclick="navigate('announcements')"><span class="nav-icon">♢</span> E'lonlar</button>
+
+      <div id="adminNavigation" class="hidden">
+        <div class="nav-label">ADMINISTRATOR</div>
+        <button class="nav-btn" data-page="adminDashboard" onclick="navigate('adminDashboard')"><span class="nav-icon">▥</span> Admin paneli</button>
+        <button class="nav-btn" data-page="manageSubjects" onclick="navigate('manageSubjects')"><span class="nav-icon">▦</span> Fanlarni boshqarish</button>
+        <button class="nav-btn" data-page="manageLessons" onclick="navigate('manageLessons')"><span class="nav-icon">▤</span> Darslarni boshqarish</button>
+        <button class="nav-btn" data-page="manageQuizzes" onclick="navigate('manageQuizzes')"><span class="nav-icon">☷</span> Testlarni boshqarish</button>
+        <button class="nav-btn" data-page="manageUsers" onclick="navigate('manageUsers')"><span class="nav-icon">♙</span> O'quvchilar</button>
+        <button class="nav-btn" data-page="manageAnnouncements" onclick="navigate('manageAnnouncements')"><span class="nav-icon">♢</span> E'lonlarni boshqarish</button>
+        <button class="nav-btn" data-page="settings" onclick="navigate('settings')"><span class="nav-icon">⚙</span> Platforma sozlamalari</button>
+        <button class="nav-btn" data-page="backup" onclick="navigate('backup')"><span class="nav-icon">⇧</span> Zaxira va tiklash</button>
+      </div>
+
+      <div class="sidebar-bottom">
+        <strong class="small">BILIMHUB</strong>
+        <p class="muted small">Bilim olish — doimiy jarayon.</p>
+        <div class="progress"><span style="width:72%"></span></div>
+        <p class="muted small">Ta'lim platformasi</p>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <!-- DASHBOARD -->
+      <section id="page-dashboard" class="page active">
+        <div class="section-head">
+          <div>
+            <h2 id="welcomeHeading">Xush kelibsiz!</h2>
+            <p>Bugun yangi bilim olish uchun ajoyib kun.</p>
+          </div>
+          <span class="pill green" id="todayLabel">Bugun</span>
+        </div>
+        <div class="stat-grid">
+          <div class="card stat-card"><div class="stat-icon">📚</div><div class="stat-value" id="dashSubjects">0</div><div class="stat-label">Mavjud fanlar</div></div>
+          <div class="card stat-card"><div class="stat-icon">📖</div><div class="stat-value" id="dashLessons">0</div><div class="stat-label">Darslar</div></div>
+          <div class="card stat-card"><div class="stat-icon">🏆</div><div class="stat-value" id="dashCompleted">0</div><div class="stat-label">Tugallangan darslar</div></div>
+          <div class="card stat-card"><div class="stat-icon">✍️</div><div class="stat-value" id="dashTests">0</div><div class="stat-label">Ishlangan testlar</div></div>
+        </div>
+        <div class="content-grid">
+          <div class="card" style="grid-column:span 2">
+            <h3 class="card-title">O'qishni davom ettiring</h3>
+            <div id="continueLearning"></div>
+          </div>
+          <div class="card">
+            <h3 class="card-title">O'zlashtirish</h3>
+            <div class="stat-value" id="dashPercent">0%</div>
+            <p class="muted small">Darslarni yakunlash ko'rsatkichi</p>
+            <div class="progress"><span id="dashProgressBar" style="width:0%"></span></div>
+            <div class="divider"></div>
+            <p class="muted small">Oxirgi faollik</p>
+            <strong id="lastActivity">Hali faollik yo'q</strong>
+          </div>
+        </div>
+        <div class="section-head" style="margin-top:25px">
+          <div><h2>Fanlaringiz</h2><p>Sinfingizga mos fanlarni tanlang.</p></div>
+          <button class="btn btn-soft btn-small" onclick="navigate('subjects')">Barcha fanlar →</button>
+        </div>
+        <div id="dashboardSubjects" class="subject-grid"></div>
+        <div class="section-head" style="margin-top:25px">
+          <div><h2>So'nggi e'lonlar</h2><p>Platformadagi yangiliklar.</p></div>
+          <button class="btn btn-plain btn-small" onclick="navigate('announcements')">Barchasi</button>
+        </div>
+        <div id="dashboardAnnouncements"></div>
+      </section>
+
+      <!-- SUBJECTS -->
+      <section id="page-subjects" class="page">
+        <div class="section-head"><div><h2>Fanlar</h2><p>O'zingizga kerakli fanni tanlang.</p></div></div>
+        <div class="toolbar"><input class="search-input" id="subjectSearch" placeholder="Fan qidirish..." oninput="renderSubjects()"><select id="subjectGradeFilter" onchange="renderSubjects()" style="max-width:160px;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--text)"><option value="">Barcha sinflar</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option></select></div>
+        <div id="subjectsList" class="subject-grid"></div>
+      </section>
+
+      <!-- LESSONS -->
+      <section id="page-lessons" class="page">
+        <div class="section-head"><div><h2>Darslar</h2><p>Matn, video va qo'shimcha materiallar.</p></div></div>
+        <div class="toolbar"><input class="search-input" id="lessonSearch" placeholder="Dars nomi bo'yicha qidirish..." oninput="renderLessons()"><select id="lessonSubjectFilter" onchange="renderLessons()" style="max-width:220px;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--text)"><option value="">Barcha fanlar</option></select></div>
+        <div id="lessonsList" class="lesson-grid"></div>
+      </section>
+
+      <!-- QUIZZES -->
+      <section id="page-quizzes" class="page">
+        <div class="section-head"><div><h2>Testlar va mashqlar</h2><p>Bilimingizni sinab ko'ring.</p></div></div>
+        <div id="quizzesList" class="lesson-grid"></div>
+      </section>
+
+      <!-- PROGRESS -->
+      <section id="page-myprogress" class="page">
+        <div class="section-head"><div><h2>Mening natijalarim</h2><p>O'qish jarayoningiz va test natijalari.</p></div><button class="btn btn-plain btn-small" onclick="window.print()">Chop etish</button></div>
+        <div class="stat-grid">
+          <div class="card stat-card"><div class="stat-icon">📖</div><div class="stat-value" id="progressLessons">0</div><div class="stat-label">Tugallangan dars</div></div>
+          <div class="card stat-card"><div class="stat-icon">✍️</div><div class="stat-value" id="progressQuizCount">0</div><div class="stat-label">Test urinishlari</div></div>
+          <div class="card stat-card"><div class="stat-icon">⭐</div><div class="stat-value" id="progressAverage">0%</div><div class="stat-label">O'rtacha test bali</div></div>
+          <div class="card stat-card"><div class="stat-icon">🔥</div><div class="stat-value" id="progressPoints">0</div><div class="stat-label">Jami ball</div></div>
+        </div>
+        <div class="card"><h3 class="card-title">Testlar tarixi</h3><div id="myQuizHistory"></div></div>
+        <div class="card"><h3 class="card-title">O'qilgan darslar</h3><div id="myLessonHistory"></div></div>
+      </section>
+
+      <!-- FAVORITES -->
+      <section id="page-favorites" class="page">
+        <div class="section-head"><div><h2>Sevimli darslar</h2><p>Keyinroq o'qish uchun saqlangan darslar.</p></div></div>
+        <div id="favoritesList" class="lesson-grid"></div>
+      </section>
+
+      <!-- ANNOUNCEMENTS -->
+      <section id="page-announcements" class="page">
+        <div class="section-head"><div><h2>E'lonlar</h2><p>Administrator tomonidan joylangan xabarlar.</p></div></div>
+        <div id="announcementsList"></div>
+      </section>
+
+      <!-- ADMIN DASHBOARD -->
+      <section id="page-adminDashboard" class="page">
+        <div class="section-head"><div><h2>Administrator paneli</h2><p>Platforma holati va tezkor boshqaruv.</p></div><span class="pill green">Administrator</span></div>
+        <div class="stat-grid">
+          <div class="card stat-card"><div class="stat-icon">👥</div><div class="stat-value" id="adminUserCount">0</div><div class="stat-label">Foydalanuvchilar</div></div>
+          <div class="card stat-card"><div class="stat-icon">📚</div><div class="stat-value" id="adminSubjectCount">0</div><div class="stat-label">Fanlar</div></div>
+          <div class="card stat-card"><div class="stat-icon">📖</div><div class="stat-value" id="adminLessonCount">0</div><div class="stat-label">Darslar</div></div>
+          <div class="card stat-card"><div class="stat-icon">✍️</div><div class="stat-value" id="adminQuizCount">0</div><div class="stat-label">Testlar</div></div>
+        </div>
+        <div class="content-grid">
+          <div class="card"><h3 class="card-title">Tezkor amallar</h3><div class="toolbar"><button class="btn btn-primary" onclick="openSubjectEditor()">+ Fan qo'shish</button><button class="btn btn-soft" onclick="openLessonEditor()">+ Dars qo'shish</button><button class="btn btn-plain" onclick="openQuizEditor()">+ Test yaratish</button><button class="btn btn-plain" onclick="openAnnouncementEditor()">+ E'lon</button></div></div>
+          <div class="card"><h3 class="card-title">Platforma holati</h3><p class="muted small">Saqlash turi: ushbu brauzer xotirasi</p><p class="muted small">Ma'lumotlar soni: <strong id="adminStorageSummary">0</strong></p><p class="muted small">Oxirgi saqlash: <strong id="adminLastSave">—</strong></p><span class="pill yellow">Lokal rejim</span></div>
+        </div>
+        <div class="card"><h3 class="card-title">So'nggi ro'yxatdan o'tganlar</h3><div id="recentUsers"></div></div>
+        <div class="card"><h3 class="card-title">So'nggi test natijalari</h3><div id="recentResults"></div></div>
+      </section>
+
+      <!-- ADMIN SUBJECTS -->
+      <section id="page-manageSubjects" class="page">
+        <div class="section-head"><div><h2>Fanlarni boshqarish</h2><p>Fanlarni yaratish, tahrirlash va o'chirish.</p></div><button class="btn btn-primary" onclick="openSubjectEditor()">+ Yangi fan</button></div>
+        <div class="toolbar"><input class="search-input" id="adminSubjectSearch" placeholder="Fan qidirish..." oninput="renderManageSubjects()"></div>
+        <div id="manageSubjectsTable"></div>
+      </section>
+
+      <!-- ADMIN LESSONS -->
+      <section id="page-manageLessons" class="page">
+        <div class="section-head"><div><h2>Darslarni boshqarish</h2><p>Dars matni, media va materiallarni boshqaring.</p></div><button class="btn btn-primary" onclick="openLessonEditor()">+ Yangi dars</button></div>
+        <div class="toolbar"><input class="search-input" id="adminLessonSearch" placeholder="Dars qidirish..." oninput="renderManageLessons()"></div>
+        <div id="manageLessonsTable"></div>
+      </section>
+
+      <!-- ADMIN QUIZZES -->
+      <section id="page-manageQuizzes" class="page">
+        <div class="section-head"><div><h2>Testlarni boshqarish</h2><p>Savollar va javob variantlarini yarating.</p></div><button class="btn btn-primary" onclick="openQuizEditor()">+ Test yaratish</button></div>
+        <div id="manageQuizzesTable"></div>
+      </section>
+
+      <!-- ADMIN USERS -->
+      <section id="page-manageUsers" class="page">
+        <div class="section-head"><div><h2>O'quvchilar</h2><p>Hisoblarni ko'rish va boshqarish.</p></div></div>
+        <div class="toolbar"><input class="search-input" id="userSearch" placeholder="Ism yoki email..." oninput="renderUsers()"></div>
+        <div id="usersTable"></div>
+      </section>
+
+      <!-- ADMIN ANNOUNCEMENTS -->
+      <section id="page-manageAnnouncements" class="page">
+        <div class="section-head"><div><h2>E'lonlarni boshqarish</h2><p>O'quvchilarga xabar yuboring.</p></div><button class="btn btn-primary" onclick="openAnnouncementEditor()">+ E'lon yozish</button></div>
+        <div id="manageAnnouncementsList"></div>
+      </section>
+
+      <!-- SETTINGS -->
+      <section id="page-settings" class="page">
+        <div class="section-head"><div><h2>Platforma sozlamalari</h2><p>BILIMHUB ko'rinishi va umumiy ma'lumotlari.</p></div></div>
+        <div class="card">
+          <form id="settingsForm">
+            <div class="form-grid">
+              <div class="field"><label>Platforma nomi</label><input id="settingPlatformName" maxlength="50"></div>
+              <div class="field"><label>Shior</label><input id="settingTagline" maxlength="120"></div>
+              <div class="field"><label>Asosiy rang</label><input id="settingPrimary" type="color" style="height:45px;padding:5px"></div>
+              <div class="field"><label>Yordam emaili</label><input id="settingSupport" type="email"></div>
+              <div class="field full"><label>Bosh sahifa xabari</label><textarea id="settingWelcome"></textarea></div>
+            </div>
+            <button class="btn btn-primary">Sozlamalarni saqlash</button>
+          </form>
+        </div>
+        <div class="card">
+          <h3 class="card-title">Administrator paroli</h3>
+          <p class="muted small">Parolni yangilang. Yangi parol kamida 10 belgidan iborat bo'lsin.</p>
+          <form id="changeAdminPasswordForm">
+            <div class="form-grid">
+              <div class="field"><label>Joriy parol</label><input id="adminOldPassword" type="password" required></div>
+              <div class="field"><label>Yangi parol</label><input id="adminNewPassword" type="password" minlength="10" required></div>
+              <div class="field"><label>Yangi parolni tasdiqlang</label><input id="adminConfirmPassword" type="password" minlength="10" required></div>
+            </div>
+            <button class="btn btn-warning">Parolni yangilash</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- BACKUP -->
+      <section id="page-backup" class="page">
+        <div class="section-head"><div><h2>Zaxira va tiklash</h2><p>Ma'lumotlaringizni JSON faylga saqlang.</p></div></div>
+        <div class="notice warning">Muhim: brauzer ma'lumotlari tozalansa, lokal ma'lumotlar yo'qolishi mumkin. Zaxira nusxasini muntazam yuklab oling.</div>
+        <div class="content-grid">
+          <div class="card"><h3 class="card-title">Zaxira nusxasi</h3><p class="muted small">Fanlar, darslar, testlar, natijalar va foydalanuvchilar ma'lumotlarini eksport qiladi.</p><button class="btn btn-primary" onclick="exportBackup()">⬇ Zaxira yuklab olish</button></div>
+          <div class="card"><h3 class="card-title">Zaxirani tiklash</h3><p class="muted small">Oldin saqlangan BILIMHUB JSON faylini tanlang.</p><input id="backupFile" type="file" accept=".json,application/json"><button class="btn btn-warning" onclick="importBackup()">Zaxirani tiklash</button></div>
+        </div>
+        <div class="card"><h3 class="card-title">Ma'lumotlar</h3><p id="backupStats" class="muted small"></p><button class="btn btn-danger" onclick="clearLearningData()">O'quv natijalarini tozalash</button></div>
+      </section>
+    </main>
+  </div>
+</section>
+
+<!-- MODAL ROOT -->
+<div id="modalRoot"></div>
+<div id="toastStack" class="toast-stack"></div>
+
+<script>
+"use strict";
+
+/* =========================================================
+   10. CONSTANTS AND APP STATE
+   ========================================================= */
+const STORAGE_KEY = "BILIMHUB_SINGLE_FILE_V3";
+const SESSION_KEY = "BILIMHUB_SESSION_V3";
+const MAX_ATTACHMENT_BYTES = 3 * 1024 * 1024;
+let db = null;
+let currentUser = null;
+let activeQuiz = null;
+let quizAnswers = {};
+let lastSavedAt = null;
+
+const $ = (id) => document.getElementById(id);
+
+const SUBJECT_ICONS = {
+  "Matematika": "📐",
+  "Ona tili": "📝",
+  "Adabiyot": "📚",
+  "Ingliz tili": "🌍",
+  "Tarix": "🏛️",
+  "Geografiya": "🌏",
+  "Biologiya": "🧬",
+  "Fizika": "⚛️",
+  "Kimyo": "🧪",
+  "Informatika": "💻",
+  "Astronomiya": "🔭",
+  "Iqtisod": "📊",
+  "Musiqa": "🎵",
+  "Tasviriy san'at": "🎨",
+  "Jismoniy tarbiya": "⚽"
+};
+
+const DEFAULT_SUBJECTS = [
+  "Matematika",
+  "Ona tili",
+  "Adabiyot",
+  "Ingliz tili",
+  "Tarix",
+  "Geografiya",
+  "Biologiya",
+  "Fizika",
+  "Kimyo",
+  "Informatika"
+];
+
+/* =========================================================
+   11. SECURITY HELPERS
+   ========================================================= */
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  }[char]));
+}
+
+function safeURL(value) {
+  const text = String(value || "").trim();
+  if (!text) return "";
+  try {
+    const url = new URL(text);
+    if (url.protocol === "https:" || url.protocol === "http:") return url.href;
+  } catch (error) {
+    return "";
+  }
+  return "";
+}
+
+async function hashPassword(password, saltText) {
+  const encoder = new TextEncoder();
+  const salt = saltText || crypto.randomUUID();
+  if (crypto.subtle && window.isSecureContext) {
+    const keyMaterial = await crypto.subtle.importKey(
+      "raw",
+      encoder.encode(password),
+      "PBKDF2",
+      false,
+      ["deriveBits"]
+    );
+    const bits = await crypto.subtle.deriveBits(
+      {
+        name: "PBKDF2",
+        salt: encoder.encode(salt),
+        iterations: 120000,
+        hash: "SHA-256"
+      },
+      keyMaterial,
+      256
+    );
+    const hash = Array.from(new Uint8Array(bits))
+      .map((byte) => byte.toString(16).padStart(2, "0"))
+      .join("");
+    return { salt, hash, algorithm: "PBKDF2-SHA256" };
+  }
+  /* Fallback hash is for local compatibility, not strong security. */
+  let hash = 2166136261;
+  const input = salt + "|" + password;
+  for (let i = 0; i < input.length; i++) {
+    hash ^= input.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  return {
+    salt,
+    hash: String(hash >>> 0),
+    algorithm: "LOCAL-FALLBACK"
+  };
+}
+
+async function verifyPassword(password, record) {
+  if (!record || !record.hash || !record.salt) return false;
+  const calculated = await hashPassword(password, record.salt);
+  return calculated.hash === record.hash;
+}
+
+function randomId(prefix) {
+  return prefix + "_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 8);
+}
+
+function nowISO() {
+  return new Date().toISOString();
+}
+
+function formatDate(value) {
+  if (!value) return "—";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "—";
+  return date.toLocaleDateString("uz-UZ", {
+    year: "numeric",
+    month: "short",
+    day: "numeric"
+  });
+}
+
+function formatDateTime(value) {
+  if (!value) return "—";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "—";
+  return date.toLocaleString("uz-UZ");
+}
+
+function initials(name) {
+  return String(name || "B")
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part) => part[0] || "")
+    .join("")
+    .toUpperCase();
+}
+
+function showToast(message, type = "success") {
+  const toast = document.createElement("div");
+  toast.className = "toast " + type;
+  toast.textContent = message;
+  $("toastStack").appendChild(toast);
+  setTimeout(() => toast.remove(), 3400);
+}
+
+function confirmAction(message) {
+  return window.confirm(message);
+}
+
+/* =========================================================
+   12. DATABASE INITIALIZATION
+   ========================================================= */
+function createEmptyDatabase() {
+  return {
+    version: 3,
+    createdAt: nowISO(),
+    updatedAt: nowISO(),
+    nextId: 1,
+    setupComplete: false,
+    admin: null,
+    teacherAdmins: [],
+    auditLog: [],
+    categories: [],
+    certificates: [],
+    users: [] ,
+    subjects: [],
+    lessons: [],
+    quizzes: [],
+    results: [],
+    announcements: [],
+    settings: {
+      platformName: "BILIMHUB",
+      tagline: "Bilim sari yangi qadam!",
+      primary: "#6258e8",
+      support: "",
+      welcome: "Bilim olishni bugundan boshlang."
+    }
+  };
+}
+
+function loadDatabase() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    db = raw ? JSON.parse(raw) : null;
+  } catch (error) {
+    db = null;
+    showToast("Saqlangan ma'lumotni o'qib bo'lmadi.", "error");
+  }
+
+  if (!db || typeof db !== "object" || !Array.isArray(db.users)) {
+    db = createEmptyDatabase();
+  }
+
+  normalizeDatabase();
+  saveDatabase();
+}
+
+function normalizeDatabase() {
+  const defaults = createEmptyDatabase();
+  const arrays = [
+    "users",
+    "subjects",
+    "lessons",
+    "quizzes",
+    "results",
+    "announcements"
+  ];
+
+  arrays.forEach((key) => {
+    if (!Array.isArray(db[key])) db[key] = [];
+  });
+
+  if (!db.settings || typeof db.settings !== "object") {
+    db.settings = defaults.settings;
+  } else {
+    db.settings = { ...defaults.settings, ...db.settings };
+  }
+
+  if (!Number.isFinite(db.nextId)) db.nextId = 1;
+  if (typeof db.setupComplete !== "boolean") db.setupComplete = Boolean(db.admin);
+
+  if (db.subjects.length === 0 && !db.setupComplete) {
+    DEFAULT_SUBJECTS.forEach((name, index) => {
+      db.subjects.push({
+        id: nextId(),
+        name,
+        grade: 5,
+        description: name + " fani bo'yicha boshlang'ich materiallar.",
+        icon: SUBJECT_ICONS[name] || "📘",
+        color: "#6258e8",
+        createdAt: nowISO(),
+        active: true,
+        order: index
+      });
+    });
+  }
+
+  db.users.forEach((user) => {
+    if (!user.status) user.status = "active";
+    if (!user.createdAt) user.createdAt = nowISO();
+    if (!Array.isArray(user.completedLessons)) user.completedLessons = [];
+    if (!Array.isArray(user.favorites)) user.favorites = [];
+  });
+}
+
+function nextId() {
+  const id = db.nextId || 1;
+  db.nextId = id + 1;
+  return id;
+}
+
+function saveDatabase() {
+  try {
+    db.updatedAt = nowISO();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+    lastSavedAt = db.updatedAt;
+    return true;
+  } catch (error) {
+    showToast("Xotira to'ldi. Katta fayllarni kamaytiring yoki zaxira oling.", "error");
+    return false;
+  }
+}
+
+function getCurrentUser() {
+  if (!currentUser) return null;
+  if (currentUser.role === "admin") return currentUser;
+  return db.users.find((user) => user.id === currentUser.id) || null;
+}
+
+function isAdmin() {
+  return Boolean(currentUser && currentUser.role === "admin");
+}
+
+function requireAdmin() {
+  if (!isAdmin()) {
+    showToast("Bu amal faqat administrator uchun.", "error");
+    return false;
+  }
+  return true;
+}
+
+/* =========================================================
+   13. FIRST-RUN ADMIN SETUP
+   ========================================================= */
+function showFirstRunSetup() {
+  if (db.setupComplete && db.admin) return false;
+
+  $("authScreen").classList.remove("hidden");
+  $("authTitle").textContent = "BILIMHUB sozlamasi";
+  $("authSubtitle").textContent = "Birinchi ishga tushirish: administrator hisobini yarating.";
+  $("loginForm").classList.add("hidden");
+  $("registerForm").classList.add("hidden");
+  $("loginTab").classList.add("hidden");
+  $("registerTab").classList.add("hidden");
+
+  openModal("Administrator hisobini yaratish", `
+    <div class="notice warning">
+      Bu birinchi sozlash oynasi. O'zingizga tegishli direktor login va kuchli parol yarating. Standart login yoki parol mavjud emas. Agar sizda avvaldan bilimhub_data.json bo'lsa, avval uni ulang.<div style="margin-top:12px"><button class="btn btn-soft btn-small" type="button" onclick="connectBilimHubJSON()">Mavjud JSON faylni ulash</button></div>
+    </div>
+    <form id="firstAdminForm">
+      <div class="field"><label>Administrator ismi</label><input id="firstAdminName" required maxlength="60" placeholder="Masalan: Bosh administrator"></div>
+      <div class="field"><label>Administrator logini</label><input id="firstAdminLogin" required minlength="4" maxlength="40" autocomplete="username" placeholder="admin_login"></div>
+      <div class="field"><label>Yangi parol</label><input id="firstAdminPassword" type="password" required minlength="10" autocomplete="new-password"></div>
+      <div class="field"><label>Parolni tasdiqlang</label><input id="firstAdminConfirm" type="password" required minlength="10"></div>
+      <button class="btn btn-primary btn-block">Administrator yaratish</button>
+    </form>
+  `, true);
+
+  $("firstAdminForm").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const name = $("firstAdminName").value.trim();
+    const login = $("firstAdminLogin").value.trim().toLowerCase();
+    const password = $("firstAdminPassword").value;
+    const confirm = $("firstAdminConfirm").value;
+
+    if (login.length < 4) {
+      showToast("Login kamida 4 belgidan iborat bo'lsin.", "error");
+      return;
+    }
+    if (password.length < 10) {
+      showToast("Parol kamida 10 belgidan iborat bo'lsin.", "error");
+      return;
+    }
+    if (password !== confirm) {
+      showToast("Parollar mos kelmadi.", "error");
+      return;
+    }
+
+    const passwordRecord = await hashPassword(password);
+    db.admin = {
+      id: "admin",
+      name,
+      username: login,
+      passwordRecord,
+      role: "director",
+      createdAt: nowISO()
+    };
+    db.setupComplete = true;
+    saveDatabase();
+    closeModal();
+    $("loginTab").classList.remove("hidden");
+    $("registerTab").classList.remove("hidden");
+    showAuthMode("login");
+    $("loginIdentity").value = login;
+    showToast("Administrator hisobi yaratildi. Endi tizimga kiring.");
+  });
+
+  return true;
+}
+
+/* =========================================================
+   14. AUTHENTICATION FLOW
+   ========================================================= */
+function showAuthMode(mode) {
+  $("loginForm").classList.toggle("hidden", mode !== "login");
+  $("registerForm").classList.toggle("hidden", mode !== "register");
+  $("loginTab").classList.toggle("active", mode === "login");
+  $("registerTab").classList.toggle("active", mode === "register");
+  $("authTitle").textContent = mode === "login" ? "Xush kelibsiz!" : "Yangi hisob yarating";
+  $("authSubtitle").textContent = mode === "login"
+    ? "Hisobingizga kirish uchun ma'lumotlarni kiriting."
+    : "O'quvchi hisobini bir necha soniyada yarating.";
+}
+
+function togglePassword(id, button) {
+  const input = $(id);
+  input.type = input.type === "password" ? "text" : "password";
+  button.textContent = input.type === "password" ? "◉" : "◎";
+}
+
+$("loginForm").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const identity = $("loginIdentity").value.trim().toLowerCase();
+  const password = $("loginPassword").value;
+
+  if (db.admin && identity === String(db.admin.username).toLowerCase()) {
+    const valid = await verifyPassword(password, db.admin.passwordRecord);
+    if (!valid) {
+      showToast("Login yoki parol noto'g'ri.", "error");
+      return;
+    }
+    enterApplication({
+      id: "admin",
+      username: db.admin.username,
+      name: db.admin.name,
+      role: "director"
+    });
+    return;
+  }
+
+  const user = db.users.find((item) =>
+    item.email.toLowerCase() === identity ||
+    item.username.toLowerCase() === identity
+  );
+
+  if (!user || !(await verifyPassword(password, user.passwordRecord))) {
+    showToast("Login yoki parol noto'g'ri.", "error");
+    return;
+  }
+
+  if (user.status === "blocked") {
+    showToast("Hisobingiz administrator tomonidan bloklangan.", "error");
+    return;
+  }
+
+  enterApplication(user);
+});
+
+$("registerForm").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const name = $("regName").value.trim();
+  const email = $("regEmail").value.trim().toLowerCase();
+  const grade = Number($("regGrade").value);
+  const password = $("regPassword").value;
+
+  if (name.length < 2) {
+    showToast("Ism kamida 2 belgidan iborat bo'lsin.", "error");
+    return;
+  }
+
+  if (password.length < 8) {
+    showToast("Parol kamida 8 belgidan iborat bo'lsin.", "error");
+    return;
+  }
+
+  if (db.users.some((user) => user.email.toLowerCase() === email)) {
+    showToast("Bu email bilan hisob mavjud.", "error");
+    return;
+  }
+
+  const passwordRecord = await hashPassword(password);
+  const user = {
+    id: nextId(),
+    username: email.split("@")[0],
+    name,
+    email,
+    grade,
+    passwordRecord,
+    role: "student",
+    status: "active",
+    createdAt: nowISO(),
+    completedLessons: [],
+    favorites: [],
+    lastActive: nowISO()
+  };
+
+  db.users.push(user);
+  saveDatabase();
+  $("registerForm").reset();
+  showAuthMode("login");
+  $("loginIdentity").value = email;
+  showToast("Hisob yaratildi. Endi tizimga kirishingiz mumkin.");
+});
+
+function enterApplication(user) {
+  currentUser = user;
+  sessionStorage.setItem(SESSION_KEY, user.role === "admin" ? "admin" : String(user.id));
+  $("authScreen").classList.add("hidden");
+  $("appScreen").classList.remove("hidden");
+  $("topName").textContent = user.name || user.username;
+  $("topRole").textContent = user.role === "admin" ? "Administrator" : (user.grade + "-sinf o'quvchisi");
+  $("topAvatar").textContent = initials(user.name || user.username);
+  $("welcomeHeading").textContent = "Xush kelibsiz, " + (user.name || user.username) + "!";
+  $("adminNavigation").classList.toggle("hidden", user.role !== "admin");
+
+  if (user.role === "student") {
+    const storedUser = db.users.find((item) => item.id === user.id);
+    if (storedUser) storedUser.lastActive = nowISO();
+  }
+
+  refreshApplication();
+  navigate(user.role === "admin" ? "adminDashboard" : "dashboard");
+}
+
+function logout() {
+  currentUser = null;
+  sessionStorage.removeItem(SESSION_KEY);
+  $("appScreen").classList.add("hidden");
+  $("authScreen").classList.remove("hidden");
+  $("loginForm").reset();
+  showAuthMode("login");
+  showToast("Tizimdan chiqdingiz.");
+}
+
+function restoreSession() {
+  const saved = sessionStorage.getItem(SESSION_KEY);
+  if (!saved) return;
+
+  if (saved === "admin" && db.admin) {
+    enterApplication({
+      id: "admin",
+      username: db.admin.username,
+      name: db.admin.name,
+      role: "director"
+    });
+    return;
+  }
+
+  const user = db.users.find((item) => String(item.id) === saved);
+  if (user && user.status !== "blocked") enterApplication(user);
+}
+
+/* =========================================================
+   15. NAVIGATION AND ACCESS CONTROL
+   ========================================================= */
+const ADMIN_PAGES = [
+  "adminDashboard",
+  "manageSubjects",
+  "manageLessons",
+  "manageQuizzes",
+  "manageUsers",
+  "manageAnnouncements",
+  "settings",
+  "backup"
+];
+
+function navigate(page) {
+  if (!currentUser) return;
+  if (ADMIN_PAGES.includes(page) && !isAdmin()) {
+    showToast("Bu sahifaga kirish huquqi yo'q.", "error");
+    return;
+  }
+
+  document.querySelectorAll(".page").forEach((section) => {
+    section.classList.remove("active");
+  });
+
+  const target = $("page-" + page);
+  if (!target) return;
+  target.classList.add("active");
+
+  document.querySelectorAll(".nav-btn").forEach((button) => {
+    button.classList.toggle("active", button.dataset.page === page);
+  });
+
+  renderPage(page);
+}
+
+function renderPage(page) {
+  const renderers = {
+    dashboard: renderDashboard,
+    subjects: renderSubjects,
+    lessons: renderLessons,
+    quizzes: renderQuizzes,
+    myprogress: renderMyProgress,
+    favorites: renderFavorites,
+    announcements: renderAnnouncements,
+    adminDashboard: renderAdminDashboard,
+    manageSubjects: renderManageSubjects,
+    manageLessons: renderManageLessons,
+    manageQuizzes: renderManageQuizzes,
+    manageUsers: renderUsers,
+    manageAnnouncements: renderManageAnnouncements,
+    settings: renderSettings,
+    backup: renderBackup
+  };
+
+  if (renderers[page]) renderers[page]();
+}
+
+/* =========================================================
+   16. DATA ACCESS HELPERS
+   ========================================================= */
+function getStudentSubjects() {
+  if (isAdmin()) return db.subjects;
+  return db.subjects.filter((subject) =>
+    subject.active !== false &&
+    Number(subject.grade) === Number(currentUser.grade)
+  );
+}
+
+function getStudentLessons() {
+  const allowed = new Set(getStudentSubjects().map((subject) => subject.id));
+  return db.lessons.filter((lesson) =>
+    lesson.published !== false &&
+    (isAdmin() || allowed.has(lesson.subjectId))
+  );
+}
+
+function getSubject(subjectId) {
+  return db.subjects.find((subject) => subject.id === subjectId);
+}
+
+function getLesson(lessonId) {
+  return db.lessons.find((lesson) => lesson.id === lessonId);
+}
+
+function getQuiz(quizId) {
+  return db.quizzes.find((quiz) => quiz.id === quizId);
+}
+
+function getSubjectName(subjectId) {
+  return getSubject(subjectId)?.name || "Noma'lum fan";
+}
+
+function getUserProgress(userId) {
+  const user = db.users.find((item) => item.id === userId);
+  if (!user) return { completed: [], favorites: [] };
+  if (!Array.isArray(user.completedLessons)) user.completedLessons = [];
+  if (!Array.isArray(user.favorites)) user.favorites = [];
+  return user;
+}
+
+function getUserResults(userId) {
+  return db.results.filter((result) => result.userId === userId);
+}
+
+function completedLessonCount(user) {
+  return (user.completedLessons || []).length;
+}
+
+/* =========================================================
+   17. APPLICATION REFRESH
+   ========================================================= */
+function refreshApplication() {
+  if (!currentUser) return;
+  populateFilters();
+  renderDashboard();
+  if (isAdmin()) renderAdminDashboard();
+}
+
+function populateFilters() {
+  const subjectOptions = getStudentSubjects()
+    .map((subject) => `<option value="${subject.id}">${escapeHTML(subject.name)} — ${subject.grade}-sinf</option>`)
+    .join("");
+
+  const lessonFilter = $("lessonSubjectFilter");
+  if (lessonFilter) {
+    lessonFilter.innerHTML = '<option value="">Barcha fanlar</option>' + subjectOptions;
+  }
+}
+
+function renderDashboard() {
+  const subjects = getStudentSubjects();
+  const lessons = getStudentLessons();
+  const completed = isAdmin()
+    ? 0
+    : completedLessonCount(getUserProgress(currentUser.id));
+  const results = isAdmin() ? [] : getUserResults(currentUser.id);
+  const percent = lessons.length ? Math.round((completed / lessons.length) * 100) : 0;
+
+  $("dashSubjects").textContent = subjects.length;
+  $("dashLessons").textContent = lessons.length;
+  $("dashCompleted").textContent = completed;
+  $("dashTests").textContent = results.length;
+  $("dashPercent").textContent = percent + "%";
+  $("dashProgressBar").style.width = Math.min(percent, 100) + "%";
+  $("todayLabel").textContent = new Date().toLocaleDateString("uz-UZ", {
+    weekday: "long",
+    day: "numeric",
+    month: "long"
+  });
+
+  const last = results.slice().sort((a, b) => b.date.localeCompare(a.date))[0];
+  $("lastActivity").textContent = last ? formatDateTime(last.date) : "Hali faollik yo'q";
+
+  $("dashboardSubjects").innerHTML = subjects.slice(0, 6).map(subjectCardHTML).join("") ||
+    emptyHTML("📚", "Hozircha fanlar mavjud emas.");
+
+  const latest = lessons.slice().sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)))[0];
+  $("continueLearning").innerHTML = latest
+    ? `<div class="lesson-card" onclick="openLesson(${latest.id})">
+         <div class="subject-emoji">📖</div>
+         <h3>${escapeHTML(latest.title)}</h3>
+         <p>${escapeHTML(getSubjectName(latest.subjectId))}</p>
+         <div class="lesson-meta"><span class="pill">Darsni ochish →</span></div>
+       </div>`
+    : emptyHTML("📖", "Hozircha darslar joylanmagan.");
+
+  const announcements = db.announcements
+    .filter((item) => item.active !== false)
+    .slice()
+    .sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)))
+    .slice(0, 2);
+
+  $("dashboardAnnouncements").innerHTML = announcements.map(announcementHTML).join("") ||
+    emptyHTML("♢", "Yangi e'lonlar yo'q.");
+}
+
+function emptyHTML(icon, text) {
+  return `<div class="empty-state"><span class="empty-icon">${icon}</span>${escapeHTML(text)}</div>`;
+}
+
+/* =========================================================
+   18. SUBJECT RENDERING
+   ========================================================= */
+function subjectCardHTML(subject) {
+  const count = db.lessons.filter((lesson) => lesson.subjectId === subject.id && lesson.published !== false).length;
+  const icon = subject.icon || SUBJECT_ICONS[subject.name] || "📘";
+  return `
+    <button class="subject-card" onclick="openSubject(${subject.id})">
+      <div class="subject-emoji">${escapeHTML(icon)}</div>
+      <h3>${escapeHTML(subject.name)}</h3>
+      <p>${subject.grade}-sinf · ${count} ta dars</p>
+      <div class="lesson-meta"><span class="pill">Fanni ochish →</span></div>
+    </button>
+  `;
+}
+
+function renderSubjects() {
+  const query = ($("subjectSearch")?.value || "").toLowerCase().trim();
+  const grade = $("subjectGradeFilter")?.value || "";
+  const list = getStudentSubjects().filter((subject) => {
+    const matchesName = subject.name.toLowerCase().includes(query);
+    const matchesGrade = !grade || String(subject.grade) === grade;
+    return matchesName && matchesGrade;
+  });
+
+  $("subjectsList").innerHTML = list.map(subjectCardHTML).join("") ||
+    emptyHTML("🔎", "Mos fan topilmadi.");
+}
+
+function openSubject(subjectId) {
+  const subject = getSubject(subjectId);
+  if (!subject) return;
+  navigate("lessons");
+  $("lessonSubjectFilter").value = String(subjectId);
+  renderLessons();
+}
+
+/* =========================================================
+   19. LESSON RENDERING AND READER
+   ========================================================= */
+function lessonCardHTML(lesson) {
+  const subject = getSubjectName(lesson.subjectId);
+  const done = !isAdmin() &&
+    (getUserProgress(currentUser.id).completedLessons || []).includes(lesson.id);
+  const favorite = !isAdmin() &&
+    (getUserProgress(currentUser.id).favorites || []).includes(lesson.id);
+
+  return `
+    <article class="lesson-card">
+      <div class="subject-emoji">📖</div>
+      <h3>${escapeHTML(lesson.title)}</h3>
+      <p>${escapeHTML(subject)}</p>
+      <p style="margin-top:8px">${escapeHTML(lesson.description || "Dars materiallari")}</p>
+      <div class="lesson-meta">
+        <span class="pill">${lesson.duration || 10} daqiqa</span>
+        ${done ? '<span class="pill green">Tugallangan</span>' : ""}
+        ${lesson.video ? '<span class="pill blue">Video</span>' : ""}
+        ${lesson.attachment ? '<span class="pill yellow">Fayl</span>' : ""}
+      </div>
+      <div class="toolbar" style="margin:14px 0 0">
+        <button class="btn btn-primary btn-small" onclick="openLesson(${lesson.id})">O'qish →</button>
+        ${!isAdmin() ? `<button class="btn btn-plain btn-small" onclick="toggleFavorite(${lesson.id})">${favorite ? "♥ Saqlangan" : "♡ Saqlash"}</button>` : ""}
+      </div>
+    </article>
+  `;
+}
+
+function renderLessons() {
+  const query = ($("lessonSearch")?.value || "").toLowerCase().trim();
+  const subjectId = $("lessonSubjectFilter")?.value || "";
+  const list = getStudentLessons().filter((lesson) => {
+    const matchesQuery =
+      lesson.title.toLowerCase().includes(query) ||
+      String(lesson.description || "").toLowerCase().includes(query);
+    const matchesSubject = !subjectId || String(lesson.subjectId) === subjectId;
+    return matchesQuery && matchesSubject;
+  });
+
+  $("lessonsList").innerHTML = list.map(lessonCardHTML).join("") ||
+    emptyHTML("📖", "Bu bo'limda darslar topilmadi.");
+}
+
+function openLesson(lessonId) {
+  const lesson = getLesson(lessonId);
+  if (!lesson) return;
+
+  const attachment = lesson.attachment
+    ? `<p><a class="btn btn-soft btn-small" href="${lesson.attachment.data}" download="${escapeHTML(lesson.attachment.name)}">⬇ ${escapeHTML(lesson.attachment.name)}</a></p>`
+    : "";
+
+  const video = safeURL(lesson.video);
+  const videoBlock = video
+    ? `<div class="divider"></div><p><a href="${escapeHTML(video)}" target="_blank" rel="noopener">▶ Videoni yangi oynada ochish</a></p>`
+    : "";
+
+  const image = lesson.image
+    ? `<p><img src="${lesson.image}" alt="Dars rasmi"></p>`
+    : "";
+
+  const isDone = !isAdmin() &&
+    (getUserProgress(currentUser.id).completedLessons || []).includes(lesson.id);
+
+  openModal(lesson.title, `
+    <div class="reader-content">
+      <p class="muted small">${escapeHTML(getSubjectName(lesson.subjectId))} · ${lesson.duration || 10} daqiqa</p>
+      <p>${escapeHTML(lesson.description || "")}</p>
+      ${image}
+      <div class="divider"></div>
+      <div>${formatLessonContent(lesson.content || "")}</div>
+      ${videoBlock}
+      ${attachment}
+      ${!isAdmin() ? `<div class="divider"></div><button class="btn ${isDone ? "btn-success" : "btn-primary"} btn-block" onclick="markLessonComplete(${lesson.id})">${isDone ? "✓ Dars tugallangan" : "Darsni tugatdim"}</button>` : ""}
+    </div>
+  `, true);
+}
+
+function formatLessonContent(content) {
+  /* Plain text is escaped; line breaks are preserved safely. */
+  return escapeHTML(content).replace(/\n/g, "<br>");
+}
+
+function markLessonComplete(lessonId) {
+  if (isAdmin()) return;
+  const user = getUserProgress(currentUser.id);
+  if (!user.completedLessons.includes(lessonId)) {
+    user.completedLessons.push(lessonId);
+    saveDatabase();
+    showToast("Dars tugallangan deb belgilandi!");
+  }
+  closeModal();
+  refreshApplication();
+}
+
+function toggleFavorite(lessonId) {
+  if (isAdmin()) return;
+  const user = getUserProgress(currentUser.id);
+  if (!user.favorites.includes(lessonId)) {
+    user.favorites.push(lessonId);
+    showToast("Sevimlilarga qo'shildi.");
+  } else {
+    user.favorites = user.favorites.filter((id) => id !== lessonId);
+    showToast("Sevimlilardan olib tashlandi.");
+  }
+  saveDatabase();
+  renderLessons();
+}
+
+function renderFavorites() {
+  if (isAdmin()) {
+    $("favoritesList").innerHTML = emptyHTML("♡", "Administrator uchun shaxsiy sevimlilar mavjud emas.");
+    return;
+  }
+  const ids = getUserProgress(currentUser.id).favorites || [];
+  const lessons = ids.map(getLesson).filter(Boolean);
+  $("favoritesList").innerHTML = lessons.map(lessonCardHTML).join("") ||
+    emptyHTML("♡", "Hozircha sevimli darslar yo'q.");
+}
+
+/* =========================================================
+   20. QUIZ LIST AND QUIZ PLAYER
+   ========================================================= */
+function visibleQuizzes() {
+  const allowedSubjects = new Set(getStudentSubjects().map((subject) => subject.id));
+  return db.quizzes.filter((quiz) =>
+    quiz.active !== false &&
+    (isAdmin() || allowedSubjects.has(quiz.subjectId))
+  );
+}
+
+function renderQuizzes() {
+  const quizzes = visibleQuizzes();
+  $("quizzesList").innerHTML = quizzes.map((quiz) => `
+    <article class="lesson-card">
+      <div class="subject-emoji">✍️</div>
+      <h3>${escapeHTML(quiz.title)}</h3>
+      <p>${escapeHTML(getSubjectName(quiz.subjectId))}</p>
+      <div class="lesson-meta">
+        <span class="pill">${quiz.questions.length} savol</span>
+        <span class="pill blue">${quiz.duration || 15} daqiqa</span>
+      </div>
+      <button class="btn btn-primary btn-small" style="margin-top:14px" onclick="startQuiz(${quiz.id})">Testni boshlash →</button>
+    </article>
+  `).join("") || emptyHTML("✍️", "Hozircha testlar mavjud emas.");
+}
+
+function startQuiz(quizId) {
+  const quiz = getQuiz(quizId);
+  if (!quiz || !quiz.questions.length) {
+    showToast("Test savollari topilmadi.", "error");
+    return;
+  }
+
+  activeQuiz = quiz;
+  quizAnswers = {};
+
+  const questionsHTML = quiz.questions.map((question, index) => `
+    <div class="quiz-question">
+      <h4>${index + 1}. ${escapeHTML(question.text)}</h4>
+      ${question.options.map((option, optionIndex) => `
+        <label class="quiz-option">
+          <input type="radio" name="question_${index}" value="${optionIndex}" onchange="quizAnswers[${index}]=${optionIndex}">
+          <span>${escapeHTML(option)}</span>
+        </label>
+      `).join("")}
+    </div>
+  `).join("");
+
+  openModal(quiz.title, `
+    <div class="notice">Savollarga javob bering. Yakunda natija avtomatik hisoblanadi.</div>
+    <form id="quizAttemptForm">
+      ${questionsHTML}
+      <button class="btn btn-primary btn-block">Testni yakunlash</button>
+    </form>
+  `, true);
+
+  $("quizAttemptForm").addEventListener("submit", (event) => {
+    event.preventDefault();
+    submitQuiz();
+  });
+}
+
+function submitQuiz() {
+  if (!activeQuiz || isAdmin()) return;
+  const questions = activeQuiz.questions;
+  let correct = 0;
+
+  questions.forEach((question, index) => {
+    if (Number(quizAnswers[index]) === Number(question.answer)) correct++;
+  });
+
+  const score = Math.round((correct / questions.length) * 100);
+  const result = {
+    id: randomId("result"),
+    userId: currentUser.id,
+    quizId: activeQuiz.id,
+    quizTitle: activeQuiz.title,
+    subjectId: activeQuiz.subjectId,
+    correct,
+    total: questions.length,
+    score,
+    date: nowISO()
+  };
+
+  db.results.push(result);
+  saveDatabase();
+
+  $("modalRoot").innerHTML = `
+    <div class="modal-backdrop">
+      <div class="modal-box">
+        <div class="quiz-result">
+          <strong>${score}%</strong>
+          <div>${correct} ta to'g'ri / ${questions.length} ta savol</div>
+          <p>${score >= 80 ? "Ajoyib natija! Davom eting." : score >= 50 ? "Yaxshi urinish. Yana mashq qiling." : "Mavzuni qayta ko'rib, yana urinib ko'ring."}</p>
+        </div>
+        <div class="toolbar" style="margin-top:16px">
+          <button class="btn btn-primary btn-block" onclick="closeModal();activeQuiz=null;refreshApplication();">Yopish</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  activeQuiz = null;
+  refreshApplication();
+}
+
+/* =========================================================
+   21. STUDENT PROGRESS AND HISTORY
+   ========================================================= */
+function renderMyProgress() {
+  if (isAdmin()) {
+    $("progressLessons").textContent = "—";
+    $("progressQuizCount").textContent = "—";
+    $("progressAverage").textContent = "—";
+    $("progressPoints").textContent = "—";
+    $("myQuizHistory").innerHTML = emptyHTML("🏆", "Administrator uchun o'quvchi natijalari mavjud emas.");
+    $("myLessonHistory").innerHTML = emptyHTML("📖", "O'quvchi kabinetida ko'rinadi.");
+    return;
+  }
+
+  const user = getUserProgress(currentUser.id);
+  const results = getUserResults(currentUser.id);
+  const average = results.length
+    ? Math.round(results.reduce((sum, item) => sum + item.score, 0) / results.length)
+    : 0;
+  const points = results.reduce((sum, item) => sum + item.score, 0) +
+    user.completedLessons.length * 10;
+
+  $("progressLessons").textContent = user.completedLessons.length;
+  $("progressQuizCount").textContent = results.length;
+  $("progressAverage").textContent = average + "%";
+  $("progressPoints").textContent = points;
+
+  const sorted = results.slice().sort((a, b) => b.date.localeCompare(a.date));
+  $("myQuizHistory").innerHTML = sorted.length
+    ? `<div class="table-wrap"><table><thead><tr><th>Test</th><th>Natija</th><th>Sana</th></tr></thead><tbody>${sorted.map((item) => `
+        <tr><td>${escapeHTML(item.quizTitle)}</td><td><span class="pill ${item.score >= 70 ? "green" : "yellow"}">${item.score}%</span></td><td>${formatDate(item.date)}</td></tr>
+      `).join("")}</tbody></table></div>`
+    : emptyHTML("🏆", "Hali test ishlanmagan.");
+
+  const completedLessons = user.completedLessons.map(getLesson).filter(Boolean);
+  $("myLessonHistory").innerHTML = completedLessons.length
+    ? `<div class="table-wrap"><table><thead><tr><th>Dars</th><th>Fan</th><th>Holat</th></tr></thead><tbody>${completedLessons.map((lesson) => `
+        <tr><td>${escapeHTML(lesson.title)}</td><td>${escapeHTML(getSubjectName(lesson.subjectId))}</td><td><span class="pill green">Tugallangan</span></td></tr>
+      `).join("")}</tbody></table></div>`
+    : emptyHTML("📖", "Hali tugallangan darslar yo'q.");
+}
+
+/* =========================================================
+   22. ANNOUNCEMENTS
+   ========================================================= */
+function announcementHTML(item) {
+  return `
+    <article class="card">
+      <div class="section-head" style="margin-bottom:7px">
+        <h3 class="card-title">${escapeHTML(item.title)}</h3>
+        <span class="pill">${formatDate(item.createdAt)}</span>
+      </div>
+      <p class="reader-content">${escapeHTML(item.content).replace(/\n/g, "<br>")}</p>
+    </article>
+  `;
+}
+
+function renderAnnouncements() {
+  const list = db.announcements
+    .filter((item) => item.active !== false)
+    .slice()
+    .sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)));
+
+  $("announcementsList").innerHTML = list.map(announcementHTML).join("") ||
+    emptyHTML("♢", "Hozircha e'lonlar yo'q.");
+}
+
+/* =========================================================
+   23. ADMIN DASHBOARD
+   ========================================================= */
+function renderAdminDashboard() {
+  if (!isAdmin()) return;
+
+  $("adminUserCount").textContent = db.users.length;
+  $("adminSubjectCount").textContent = db.subjects.length;
+  $("adminLessonCount").textContent = db.lessons.length;
+  $("adminQuizCount").textContent = db.quizzes.length;
+  $("adminStorageSummary").textContent =
+    db.users.length + db.subjects.length + db.lessons.length +
+    db.quizzes.length + db.results.length + db.announcements.length;
+  $("adminLastSave").textContent = formatDateTime(lastSavedAt || db.updatedAt);
+
+  const recentUsers = db.users.slice()
+    .sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)))
+    .slice(0, 5);
+
+  $("recentUsers").innerHTML = recentUsers.length
+    ? `<div class="table-wrap"><table><thead><tr><th>Ism</th><th>Email</th><th>Sinf</th><th>Sana</th></tr></thead><tbody>${recentUsers.map((user) => `
+        <tr><td>${escapeHTML(user.name)}</td><td>${escapeHTML(user.email)}</td><td>${user.grade}-sinf</td><td>${formatDate(user.createdAt)}</td></tr>
+      `).join("")}</tbody></table></div>`
+    : emptyHTML("👥", "Hali o'quvchilar yo'q.");
+
+  const recentResults = db.results.slice()
+    .sort((a, b) => b.date.localeCompare(a.date))
+    .slice(0, 5);
+
+  $("recentResults").innerHTML = recentResults.length
+    ? `<div class="table-wrap"><table><thead><tr><th>O'quvchi</th><th>Test</th><th>Ball</th></tr></thead><tbody>${recentResults.map((result) => {
+        const user = db.users.find((item) => item.id === result.userId);
+        return `<tr><td>${escapeHTML(user?.name || "O'chirilgan hisob")}</td><td>${escapeHTML(result.quizTitle)}</td><td>${result.score}%</td></tr>`;
+      }).join("")}</tbody></table></div>`
+    : emptyHTML("🏆", "Test natijalari hali yo'q.");
+}
+
+/* =========================================================
+   24. ADMIN SUBJECT CRUD
+   ========================================================= */
+function openSubjectEditor(subjectId = null) {
+  if (!requireAdmin()) return;
+  const subject = subjectId ? getSubject(subjectId) : null;
+
+  openModal(subject ? "Fanni tahrirlash" : "Yangi fan qo'shish", `
+    <form id="subjectEditorForm">
+      <div class="form-grid">
+        <div class="field full"><label>Fan nomi</label><input id="editSubjectName" required maxlength="70" value="${escapeHTML(subject?.name || "")}"></div>
+        <div class="field"><label>Sinf</label><select id="editSubjectGrade" required>${[5,6,7,8,9,10,11].map((grade) => `<option value="${grade}" ${Number(subject?.grade || 5) === grade ? "selected" : ""}>${grade}-sinf</option>`).join("")}</select></div>
+        <div class="field"><label>Belgi (emoji)</label><input id="editSubjectIcon" maxlength="8" value="${escapeHTML(subject?.icon || "📘")}"></div>
+        <div class="field"><label>Rang</label><input id="editSubjectColor" type="color" value="${escapeHTML(subject?.color || "#6258e8")}" style="height:44px;padding:5px"></div>
+        <div class="field"><label>Holati</label><select id="editSubjectActive"><option value="true" ${subject?.active !== false ? "selected" : ""}>Faol</option><option value="false" ${subject?.active === false ? "selected" : ""}>Yashirin</option></select></div>
+        <div class="field full"><label>Qisqacha tavsif</label><textarea id="editSubjectDescription">${escapeHTML(subject?.description || "")}</textarea></div>
+      </div>
+      <button class="btn btn-primary btn-block">${subject ? "O'zgarishlarni saqlash" : "Fanni yaratish"}</button>
+    </form>
+  `);
+
+  $("subjectEditorForm").addEventListener("submit", (event) => {
+    event.preventDefault();
+    const name = $("editSubjectName").value.trim();
+    const grade = Number($("editSubjectGrade").value);
+    const duplicate = db.subjects.some((item) =>
+      item.id !== subjectId &&
+      item.name.toLowerCase() === name.toLowerCase() &&
+      Number(item.grade) === grade
+    );
+
+    if (duplicate) {
+      showToast("Bu fan shu sinf uchun mavjud.", "error");
+      return;
+    }
+
+    const data = {
+      name,
+      grade,
+      icon: $("editSubjectIcon").value.trim() || "📘",
+      color: $("editSubjectColor").value,
+      active: $("editSubjectActive").value === "true",
+      description: $("editSubjectDescription").value.trim()
+    };
+
+    if (subject) {
+      Object.assign(subject, data, { updatedAt: nowISO() });
+    } else {
+      db.subjects.push({
+        id: nextId(),
+        ...data,
+        createdAt: nowISO(),
+        order: db.subjects.length
+      });
+    }
+
+    saveDatabase();
+    closeModal();
+    refreshApplication();
+    renderManageSubjects();
+    showToast(subject ? "Fan yangilandi." : "Fan qo'shildi.");
+  });
+}
+
+function renderManageSubjects() {
+  const query = ($("adminSubjectSearch")?.value || "").toLowerCase();
+  const list = db.subjects.filter((subject) => subject.name.toLowerCase().includes(query));
+
+  $("manageSubjectsTable").innerHTML = list.length
+    ? `<div class="table-wrap"><table><thead><tr><th>Fan</th><th>Sinf</th><th>Darslar</th><th>Holat</th><th>Amallar</th></tr></thead><tbody>${list.map((subject) => `
+        <tr>
+          <td>${escapeHTML(subject.icon || "📘")} <strong>${escapeHTML(subject.name)}</strong></td>
+          <td>${subject.grade}-sinf</td>
+          <td>${db.lessons.filter((lesson) => lesson.subjectId === subject.id).length}</td>
+          <td><span class="pill ${subject.active === false ? "red" : "green"}">${subject.active === false ? "Yashirin" : "Faol"}</span></td>
+          <td>
+            <button class="btn btn-soft btn-small" onclick="openSubjectEditor(${subject.id})">Tahrirlash</button>
+            <button class="btn btn-danger btn-small" onclick="deleteSubject(${subject.id})">O'chirish</button>
+          </td>
+        </tr>
+      `).join("")}</tbody></table></div>`
+    : emptyHTML("📚", "Fan topilmadi.");
+}
+
+function deleteSubject(subjectId) {
+  if (!requireAdmin()) return;
+  const subject = getSubject(subjectId);
+  if (!subject) return;
+  if (!confirmAction(`"${subject.name}" fanini o'chirasizmi? Shu fanga tegishli dars va testlar ham o'chadi.`)) return;
+
+  db.subjects = db.subjects.filter((item) => item.id !== subjectId);
+  db.lessons = db.lessons.filter((item) => item.subjectId !== subjectId);
+  db.quizzes = db.quizzes.filter((item) => item.subjectId !== subjectId);
+  saveDatabase();
+  refreshApplication();
+  renderManageSubjects();
+  showToast("Fan va unga tegishli materiallar o'chirildi.");
+}
+
+/* =========================================================
+   25. ADMIN LESSON CRUD
+   ========================================================= */
+function openLessonEditor(lessonId = null) {
+  if (!requireAdmin()) return;
+  if (!db.subjects.length) {
+    showToast("Avval fan yarating.", "error");
+    return;
+  }
+
+  const lesson = lessonId ? getLesson(lessonId) : null;
+
+  openModal(lesson ? "Darsni tahrirlash" : "Yangi dars yaratish", `
+    <form id="lessonEditorForm">
+      <div class="form-grid">
+        <div class="field full"><label>Dars nomi</label><input id="editLessonTitle" required maxlength="120" value="${escapeHTML(lesson?.title || "")}"></div>
+        <div class="field"><label>Fan</label><select id="editLessonSubject" required>${db.subjects.map((subject) => `<option value="${subject.id}" ${Number(lesson?.subjectId) === subject.id ? "selected" : ""}>${escapeHTML(subject.name)} — ${subject.grade}-sinf</option>`).join("")}</select></div>
+        <div class="field"><label>Davomiyligi (daqiqa)</label><input id="editLessonDuration" type="number" min="1" max="600" value="${Number(lesson?.duration || 15)}"></div>
+        <div class="field full"><label>Qisqacha tavsif</label><textarea id="editLessonDescription">${escapeHTML(lesson?.description || "")}</textarea></div>
+        <div class="field full"><label>Darsning to'liq matni</label><textarea id="editLessonContent" required style="min-height:230px">${escapeHTML(lesson?.content || "")}</textarea><small>Matn oddiy ko'rinishda saqlanadi. Yangi qatordan yozishingiz mumkin.</small></div>
+        <div class="field full"><label>Video havolasi (ixtiyoriy)</label><input id="editLessonVideo" type="url" placeholder="https://..." value="${escapeHTML(lesson?.video || "")}"></div>
+        <div class="field"><label>Rasm yuklash (3 MB gacha)</label><input id="editLessonImage" type="file" accept="image/*"></div>
+        <div class="field"><label>PDF yoki material (3 MB gacha)</label><input id="editLessonAttachment" type="file" accept=".pdf,.txt,.doc,.docx,.ppt,.pptx,application/pdf,text/plain"></div>
+        <div class="field"><label>Nashr holati</label><select id="editLessonPublished"><option value="true" ${lesson?.published !== false ? "selected" : ""}>O'quvchilarga ko'rinsin</option><option value="false" ${lesson?.published === false ? "selected" : ""}>Qoralama</option></select></div>
+      </div>
+      <div class="notice warning">Katta fayllar brauzer xotirasini tez to'ldirishi mumkin. Har bir biriktirma 3 MB bilan cheklangan.</div>
+      <button class="btn btn-primary btn-block">${lesson ? "Darsni yangilash" : "Darsni saqlash"}</button>
+    </form>
+  `, true);
+
+  $("lessonEditorForm").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const videoInput = $("editLessonVideo").value.trim();
+    if (videoInput && !safeURL(videoInput)) {
+      showToast("Video havolasi http:// yoki https:// bo'lishi kerak.", "error");
+      return;
+    }
+
+    const imageFile = $("editLessonImage").files[0];
+    const attachmentFile = $("editLessonAttachment").files[0];
+
+    if (imageFile && imageFile.size > MAX_ATTACHMENT_BYTES) {
+      showToast("Rasm 3 MB dan kichik bo'lishi kerak.", "error");
+      return;
+    }
+    if (attachmentFile && attachmentFile.size > MAX_ATTACHMENT_BYTES) {
+      showToast("Fayl 3 MB dan kichik bo'lishi kerak.", "error");
+      return;
+    }
+
+    const imageData = imageFile ? await fileToDataURL(imageFile) : lesson?.image || "";
+    const attachmentData = attachmentFile
+      ? {
+          name: attachmentFile.name,
+          type: attachmentFile.type,
+          data: await fileToDataURL(attachmentFile)
+        }
+      : lesson?.attachment || null;
+
+    const data = {
+      title: $("editLessonTitle").value.trim(),
+      subjectId: Number($("editLessonSubject").value),
+      duration: Math.max(1, Number($("editLessonDuration").value) || 15),
+      description: $("editLessonDescription").value.trim(),
+      content: $("editLessonContent").value.trim(),
+      video: safeURL(videoInput),
+      image: imageData,
+      attachment: attachmentData,
+      published: $("editLessonPublished").value === "true"
+    };
+
+    if (lesson) {
+      Object.assign(lesson, data, { updatedAt: nowISO() });
+    } else {
+      db.lessons.push({
+        id: nextId(),
+        ...data,
+        createdAt: nowISO()
+      });
+    }
+
+    saveDatabase();
+    closeModal();
+    refreshApplication();
+    renderManageLessons();
+    showToast(lesson ? "Dars yangilandi." : "Dars saqlandi.");
+  });
+}
+
+function fileToDataURL(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+function renderManageLessons() {
+  const query = ($("adminLessonSearch")?.value || "").toLowerCase();
+  const list = db.lessons.filter((lesson) =>
+    lesson.title.toLowerCase().includes(query) ||
+    getSubjectName(lesson.subjectId).toLowerCase().includes(query)
+  );
+
+  $("manageLessonsTable").innerHTML = list.length
+    ? `<div class="table-wrap"><table><thead><tr><th>Dars</th><th>Fan</th><th>Holat</th><th>Material</th><th>Amallar</th></tr></thead><tbody>${list.map((lesson) => `
+        <tr>
+          <td><strong>${escapeHTML(lesson.title)}</strong><div class="muted small">${formatDate(lesson.createdAt)}</div></td>
+          <td>${escapeHTML(getSubjectName(lesson.subjectId))}</td>
+          <td><span class="pill ${lesson.published === false ? "yellow" : "green"}">${lesson.published === false ? "Qoralama" : "Nashr qilingan"}</span></td>
+          <td>${lesson.video ? "Video " : ""}${lesson.attachment ? "Fayl " : ""}${lesson.image ? "Rasm" : ""}</td>
+          <td><button class="btn btn-soft btn-small" onclick="openLessonEditor(${lesson.id})">Tahrirlash</button> <button class="btn btn-danger btn-small" onclick="deleteLesson(${lesson.id})">O'chirish</button></td>
+        </tr>
+      `).join("")}</tbody></table></div>`
+    : emptyHTML("📖", "Darslar mavjud emas.");
+}
+
+function deleteLesson(lessonId) {
+  if (!requireAdmin()) return;
+  if (!confirmAction("Ushbu darsni o'chirishni tasdiqlaysizmi?")) return;
+
+  db.lessons = db.lessons.filter((lesson) => lesson.id !== lessonId);
+  db.users.forEach((user) => {
+    user.completedLessons = (user.completedLessons || []).filter((id) => id !== lessonId);
+    user.favorites = (user.favorites || []).filter((id) => id !== lessonId);
+  });
+
+  saveDatabase();
+  refreshApplication();
+  renderManageLessons();
+  showToast("Dars o'chirildi.");
+}
+
+/* =========================================================
+   26. ADMIN QUIZ CRUD
+   ========================================================= */
+function openQuizEditor(quizId = null) {
+  if (!requireAdmin()) return;
+  if (!db.subjects.length) {
+    showToast("Avval fan yarating.", "error");
+    return;
+  }
+
+  const quiz = quizId ? getQuiz(quizId) : null;
+  const existingQuestions = quiz?.questions || [
+    { text: "", options: ["", "", "", ""], answer: 0 }
+  ];
+
+  openModal(quiz ? "Testni tahrirlash" : "Yangi test yaratish", `
+    <form id="quizEditorForm">
+      <div class="form-grid">
+        <div class="field full"><label>Test nomi</label><input id="editQuizTitle" required maxlength="100" value="${escapeHTML(quiz?.title || "")}"></div>
+        <div class="field"><label>Fan</label><select id="editQuizSubject" required>${db.subjects.map((subject) => `<option value="${subject.id}" ${Number(quiz?.subjectId) === subject.id ? "selected" : ""}>${escapeHTML(subject.name)} — ${subject.grade}-sinf</option>`).join("")}</select></div>
+        <div class="field"><label>Davomiyligi (daqiqa)</label><input id="editQuizDuration" type="number" min="1" max="180" value="${Number(quiz?.duration || 15)}"></div>
+      </div>
+      <div id="quizQuestionBuilder"></div>
+      <div class="toolbar"><button class="btn btn-soft" type="button" onclick="addQuizQuestion()">+ Savol qo'shish</button></div>
+      <button class="btn btn-primary btn-block">Testni saqlash</button>
+    </form>
+  `, true);
+
+  window.quizBuilderQuestions = JSON.parse(JSON.stringify(existingQuestions));
+  renderQuizQuestionBuilder();
+
+  $("quizEditorForm").addEventListener("submit", (event) => {
+    event.preventDefault();
+    collectQuizBuilderValues();
+    const questions = window.quizBuilderQuestions;
+
+    if (!questions.length || questions.some((question) =>
+      !question.text.trim() ||
+      question.options.some((option) => !option.trim()) ||
+      question.answer < 0 ||
+      question.answer > 3
+    )) {
+      showToast("Har bir savol va uning 4 ta varianti to'ldirilishi kerak.", "error");
+      return;
+    }
+
+    const data = {
+      title: $("editQuizTitle").value.trim(),
+      subjectId: Number($("editQuizSubject").value),
+      duration: Math.max(1, Number($("editQuizDuration").value) || 15),
+      questions,
+      active: true
+    };
+
+    if (quiz) {
+      Object.assign(quiz, data, { updatedAt: nowISO() });
+    } else {
+      db.quizzes.push({ id: nextId(), ...data, createdAt: nowISO() });
+    }
+
+    saveDatabase();
+    closeModal();
+    refreshApplication();
+    renderManageQuizzes();
+    showToast(quiz ? "Test yangilandi." : "Test yaratildi.");
+  });
+}
+
+function renderQuizQuestionBuilder() {
+  const questions = window.quizBuilderQuestions || [];
+  $("quizQuestionBuilder").innerHTML = questions.map((question, index) => `
+    <div class="card" style="margin:12px 0;padding:15px">
+      <div class="section-head">
+        <h3 class="card-title">Savol ${index + 1}</h3>
+        <button class="btn btn-danger btn-small" type="button" onclick="removeQuizQuestion(${index})">O'chirish</button>
+      </div>
+      <div class="field"><label>Savol matni</label><textarea data-q="${index}" data-field="text">${escapeHTML(question.text)}</textarea></div>
+      <div class="form-grid">
+        ${question.options.map((option, optionIndex) => `
+          <div class="field"><label>${String.fromCharCode(65 + optionIndex)} varianti</label><input data-q="${index}" data-option="${optionIndex}" value="${escapeHTML(option)}"></div>
+        `).join("")}
+      </div>
+      <div class="field"><label>To'g'ri javob</label><select data-q="${index}" data-field="answer">${question.options.map((option, optionIndex) => `<option value="${optionIndex}" ${Number(question.answer) === optionIndex ? "selected" : ""}>${String.fromCharCode(65 + optionIndex)} varianti</option>`).join("")}</select></div>
+    </div>
+  `).join("");
+}
+
+function collectQuizBuilderValues() {
+  const questions = window.quizBuilderQuestions || [];
+  document.querySelectorAll("#quizQuestionBuilder [data-q]").forEach((element) => {
+    const index = Number(element.dataset.q);
+    if (!questions[index]) return;
+
+    if (element.dataset.option !== undefined) {
+      questions[index].options[Number(element.dataset.option)] = element.value;
+    } else if (element.dataset.field === "answer") {
+      questions[index].answer = Number(element.value);
+    } else if (element.dataset.field === "text") {
+      questions[index].text = element.value;
+    }
+  });
+}
+
+function addQuizQuestion() {
+  collectQuizBuilderValues();
+  window.quizBuilderQuestions.push({
+    text: "",
+    options: ["", "", "", ""],
+    answer: 0
+  });
+  renderQuizQuestionBuilder();
+}
+
+function removeQuizQuestion(index) {
+  collectQuizBuilderValues();
+  window.quizBuilderQuestions.splice(index, 1);
+  renderQuizQuestionBuilder();
+}
+
+function renderManageQuizzes() {
+  $("manageQuizzesTable").innerHTML = db.quizzes.length
+    ? `<div class="table-wrap"><table><thead><tr><th>Test</th><th>Fan</th><th>Savollar</th><th>Holat</th><th>Amallar</th></tr></thead><tbody>${db.quizzes.map((quiz) => `
+        <tr><td><strong>${escapeHTML(quiz.title)}</strong></td><td>${escapeHTML(getSubjectName(quiz.subjectId))}</td><td>${quiz.questions.length}</td><td><span class="pill ${quiz.active === false ? "red" : "green"}">${quiz.active === false ? "Yashirin" : "Faol"}</span></td><td><button class="btn btn-soft btn-small" onclick="openQuizEditor(${quiz.id})">Tahrirlash</button> <button class="btn btn-danger btn-small" onclick="deleteQuiz(${quiz.id})">O'chirish</button></td></tr>
+      `).join("")}</tbody></table></div>`
+    : emptyHTML("✍️", "Hali test yaratilmagan.");
+}
+
+function deleteQuiz(quizId) {
+  if (!requireAdmin()) return;
+  if (!confirmAction("Testni o'chirishni tasdiqlaysizmi?")) return;
+  db.quizzes = db.quizzes.filter((quiz) => quiz.id !== quizId);
+  saveDatabase();
+  renderManageQuizzes();
+  renderAdminDashboard();
+  showToast("Test o'chirildi.");
+}
+
+/* =========================================================
+   27. ADMIN USER MANAGEMENT
+   ========================================================= */
+function renderUsers() {
+  const query = ($("userSearch")?.value || "").toLowerCase();
+  const users = db.users.filter((user) =>
+    user.name.toLowerCase().includes(query) ||
+    user.email.toLowerCase().includes(query)
+  );
+
+  $("usersTable").innerHTML = users.length
+    ? `<div class="table-wrap"><table><thead><tr><th>O'quvchi</th><th>Email</th><th>Sinf</th><th>Ro'yxatdan o'tgan</th><th>Natija</th><th>Holat</th><th>Amallar</th></tr></thead><tbody>${users.map((user) => {
+        const results = getUserResults(user.id);
+        const average = results.length ? Math.round(results.reduce((sum, item) => sum + item.score, 0) / results.length) : 0;
+        return `<tr>
+          <td><strong>${escapeHTML(user.name)}</strong></td>
+          <td>${escapeHTML(user.email)}</td>
+          <td>${user.grade}-sinf</td>
+          <td>${formatDate(user.createdAt)}</td>
+          <td>${average}% · ${results.length} test</td>
+          <td><span class="pill ${user.status === "blocked" ? "red" : "green"}">${user.status === "blocked" ? "Bloklangan" : "Faol"}</span></td>
+          <td><button class="btn btn-soft btn-small" onclick="viewStudent(${user.id})">Ko'rish</button> <button class="btn btn-warning btn-small" onclick="toggleUserBlock(${user.id})">${user.status === "blocked" ? "Ochish" : "Bloklash"}</button> <button class="btn btn-danger btn-small" onclick="deleteUser(${user.id})">O'chirish</button></td>
+        </tr>`;
+      }).join("")}</tbody></table></div>`
+    : emptyHTML("👥", "O'quvchilar topilmadi.");
+}
+
+function viewStudent(userId) {
+  if (!requireAdmin()) return;
+  const user = db.users.find((item) => item.id === userId);
+  if (!user) return;
+  const results = getUserResults(userId);
+  const average = results.length ? Math.round(results.reduce((sum, item) => sum + item.score, 0) / results.length) : 0;
+
+  openModal("O'quvchi ma'lumotlari", `
+    <div class="stat-grid">
+      <div class="card stat-card"><div class="stat-value">${completedLessonCount(user)}</div><div class="stat-label">Tugallangan dars</div></div>
+      <div class="card stat-card"><div class="stat-value">${results.length}</div><div class="stat-label">Test urinishlari</div></div>
+      <div class="card stat-card"><div class="stat-value">${average}%</div><div class="stat-label">O'rtacha ball</div></div>
+    </div>
+    <p><strong>Ism:</strong> ${escapeHTML(user.name)}</p>
+    <p><strong>Email:</strong> ${escapeHTML(user.email)}</p>
+    <p><strong>Sinf:</strong> ${user.grade}-sinf</p>
+    <p><strong>Ro'yxatdan o'tgan:</strong> ${formatDateTime(user.createdAt)}</p>
+    <p><strong>Oxirgi faollik:</strong> ${formatDateTime(user.lastActive)}</p>
+    <h3>Testlar tarixi</h3>
+    ${results.length ? `<div class="table-wrap"><table><thead><tr><th>Test</th><th>Ball</th><th>Sana</th></tr></thead><tbody>${results.map((result) => `<tr><td>${escapeHTML(result.quizTitle)}</td><td>${result.score}%</td><td>${formatDate(result.date)}</td></tr>`).join("")}</tbody></table></div>` : emptyHTML("🏆", "Test natijasi yo'q.")}
+  `, true);
+}
+
+function toggleUserBlock(userId) {
+  if (!requireAdmin()) return;
+  const user = db.users.find((item) => item.id === userId);
+  if (!user) return;
+  user.status = user.status === "blocked" ? "active" : "blocked";
+  saveDatabase();
+  renderUsers();
+  showToast(user.status === "blocked" ? "O'quvchi bloklandi." : "O'quvchi hisobi faollashtirildi.");
+}
+
+function deleteUser(userId) {
+  if (!requireAdmin()) return;
+  if (!confirmAction("O'quvchi hisobi va uning natijalarini o'chirasizmi?")) return;
+  db.users = db.users.filter((user) => user.id !== userId);
+  db.results = db.results.filter((result) => result.userId !== userId);
+  saveDatabase();
+  renderUsers();
+  renderAdminDashboard();
+  showToast("O'quvchi hisobi o'chirildi.");
+}
+
+/* =========================================================
+   28. ADMIN ANNOUNCEMENT MANAGEMENT
+   ========================================================= */
+function openAnnouncementEditor(announcementId = null) {
+  if (!requireAdmin()) return;
+  const item = announcementId
+    ? db.announcements.find((announcement) => announcement.id === announcementId)
+    : null;
+
+  openModal(item ? "E'lonni tahrirlash" : "Yangi e'lon", `
+    <form id="announcementForm">
+      <div class="field"><label>Sarlavha</label><input id="announcementTitle" required maxlength="100" value="${escapeHTML(item?.title || "")}"></div>
+      <div class="field"><label>Matn</label><textarea id="announcementContent" required style="min-height:160px">${escapeHTML(item?.content || "")}</textarea></div>
+      <div class="field"><label>Holat</label><select id="announcementActive"><option value="true" ${item?.active !== false ? "selected" : ""}>O'quvchilarga ko'rinsin</option><option value="false" ${item?.active === false ? "selected" : ""}>Yashirin</option></select></div>
+      <button class="btn btn-primary btn-block">Saqlash</button>
+    </form>
+  `);
+
+  $("announcementForm").addEventListener("submit", (event) => {
+    event.preventDefault();
+    const data = {
+      title: $("announcementTitle").value.trim(),
+      content: $("announcementContent").value.trim(),
+      active: $("announcementActive").value === "true"
+    };
+
+    if (item) {
+      Object.assign(item, data, { updatedAt: nowISO() });
+    } else {
+      db.announcements.push({
+        id: nextId(),
+        ...data,
+        createdAt: nowISO()
+      });
+    }
+
+    saveDatabase();
+    closeModal();
+    renderManageAnnouncements();
+    renderAnnouncements();
+    renderDashboard();
+    showToast("E'lon saqlandi.");
+  });
+}
+
+function renderManageAnnouncements() {
+  $("manageAnnouncementsList").innerHTML = db.announcements.length
+    ? db.announcements.slice().sort((a, b) => b.createdAt.localeCompare(a.createdAt)).map((item) => `
+        <article class="card">
+          <div class="section-head">
+            <div><h3 class="card-title">${escapeHTML(item.title)}</h3><p>${formatDateTime(item.createdAt)}</p></div>
+            <span class="pill ${item.active === false ? "red" : "green"}">${item.active === false ? "Yashirin" : "Faol"}</span>
+          </div>
+          <p>${escapeHTML(item.content)}</p>
+          <div class="toolbar"><button class="btn btn-soft btn-small" onclick="openAnnouncementEditor(${item.id})">Tahrirlash</button><button class="btn btn-danger btn-small" onclick="deleteAnnouncement(${item.id})">O'chirish</button></div>
+        </article>
+      `).join("")
+    : emptyHTML("♢", "E'lonlar mavjud emas.");
+}
+
+function deleteAnnouncement(id) {
+  if (!requireAdmin()) return;
+  if (!confirmAction("E'lonni o'chirishni tasdiqlaysizmi?")) return;
+  db.announcements = db.announcements.filter((item) => item.id !== id);
+  saveDatabase();
+  renderManageAnnouncements();
+  renderAnnouncements();
+  showToast("E'lon o'chirildi.");
+}
+
+/* =========================================================
+   29. PLATFORM SETTINGS
+   ========================================================= */
+function renderSettings() {
+  if (!requireAdmin()) return;
+  $("settingPlatformName").value = db.settings.platformName || "BILIMHUB";
+  $("settingTagline").value = db.settings.tagline || "";
+  $("settingPrimary").value = db.settings.primary || "#6258e8";
+  $("settingSupport").value = db.settings.support || "";
+  $("settingWelcome").value = db.settings.welcome || "";
+}
+
+$("settingsForm").addEventListener("submit", (event) => {
+  event.preventDefault();
+  if (!requireAdmin()) return;
+
+  db.settings.platformName = $("settingPlatformName").value.trim() || "BILIMHUB";
+  db.settings.tagline = $("settingTagline").value.trim();
+  db.settings.primary = $("settingPrimary").value;
+  db.settings.support = $("settingSupport").value.trim();
+  db.settings.welcome = $("settingWelcome").value.trim();
+
+  document.documentElement.style.setProperty("--primary", db.settings.primary);
+  saveDatabase();
+  showToast("Platforma sozlamalari saqlandi.");
+});
+
+$("changeAdminPasswordForm").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  if (!requireAdmin()) return;
+
+  const oldPassword = $("adminOldPassword").value;
+  const newPassword = $("adminNewPassword").value;
+  const confirm = $("adminConfirmPassword").value;
+
+  if (!(await verifyPassword(oldPassword, db.admin.passwordRecord))) {
+    showToast("Joriy parol noto'g'ri.", "error");
+    return;
+  }
+  if (newPassword.length < 10) {
+    showToast("Yangi parol kamida 10 belgidan iborat bo'lsin.", "error");
+    return;
+  }
+  if (newPassword !== confirm) {
+    showToast("Yangi parollar mos kelmadi.", "error");
+    return;
+  }
+
+  db.admin.passwordRecord = await hashPassword(newPassword);
+  saveDatabase();
+  $("changeAdminPasswordForm").reset();
+  showToast("Administrator paroli yangilandi.");
+});
+
+/* =========================================================
+   30. BACKUP AND RESTORE
+   ========================================================= */
+function renderBackup() {
+  if (!requireAdmin()) return;
+  $("backupStats").textContent =
+    `Foydalanuvchilar: ${db.users.length} · Fanlar: ${db.subjects.length} · Darslar: ${db.lessons.length} · Testlar: ${db.quizzes.length} · Natijalar: ${db.results.length} · E'lonlar: ${db.announcements.length}`;
+}
+
+function exportBackup() {
+  if (!requireAdmin()) return;
+  const payload = {
+    product: "BILIMHUB",
+    exportedAt: nowISO(),
+    database: db
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {
+    type: "application/json"
+  });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = "bilimhub-backup-" + new Date().toISOString().slice(0, 10) + ".json";
+  anchor.click();
+  URL.revokeObjectURL(url);
+  showToast("Zaxira fayli tayyorlandi.");
+}
+
+async function importBackup() {
+  if (!requireAdmin()) return;
+  const file = $("backupFile").files[0];
+  if (!file) {
+    showToast("Avval JSON zaxira faylini tanlang.", "error");
+    return;
+  }
+  if (file.size > 25 * 1024 * 1024) {
+    showToast("Zaxira fayli 25 MB dan katta.", "error");
+    return;
+  }
+
+  try {
+    const text = await file.text();
+    const parsed = JSON.parse(text);
+    const candidate = parsed.database || parsed;
+    if (!candidate || !Array.isArray(candidate.users) || !Array.isArray(candidate.subjects)) {
+      throw new Error("Invalid backup");
+    }
+
+    if (!confirmAction("Joriy ma'lumotlar tanlangan zaxira bilan almashtiriladi. Davom etasizmi?")) return;
+
+    db = candidate;
+    normalizeDatabase();
+    saveDatabase();
+    showToast("Zaxira tiklandi. Sahifa yangilanadi.");
+    setTimeout(() => location.reload(), 900);
+  } catch (error) {
+    showToast("Zaxira faylini o'qib bo'lmadi.", "error");
+  }
+}
+
+function clearLearningData() {
+  if (!requireAdmin()) return;
+  if (!confirmAction("Barcha o'quv natijalari, sevimlilar va test urinishlari o'chadi. Davom etasizmi?")) return;
+
+  db.results = [];
+  db.users.forEach((user) => {
+    user.completedLessons = [];
+    user.favorites = [];
+  });
+  saveDatabase();
+  renderBackup();
+  renderAdminDashboard();
+  showToast("O'quv natijalari tozalandi.");
+}
+
+/* =========================================================
+   31. GLOBAL SEARCH
+   ========================================================= */
+function globalSearch(value) {
+  const query = String(value || "").trim();
+  if (!query) return;
+  navigate("lessons");
+  $("lessonSearch").value = query;
+  renderLessons();
+}
+
+/* =========================================================
+   32. THEME
+   ========================================================= */
+function toggleTheme() {
+  document.body.classList.toggle("dark");
+  localStorage.setItem("BILIMHUB_THEME", document.body.classList.contains("dark") ? "dark" : "light");
+}
+
+function restoreTheme() {
+  const theme = localStorage.getItem("BILIMHUB_THEME");
+  document.body.classList.toggle("dark", theme === "dark");
+}
+
+/* =========================================================
+   33. MODAL UTILITIES
+   ========================================================= */
+function openModal(title, body, wide = false) {
+  $("modalRoot").innerHTML = `
+    <div class="modal-backdrop" onclick="if(event.target===this)closeModal()">
+      <div class="modal-box ${wide ? "wide" : ""}">
+        <div class="modal-head">
+          <h3>${escapeHTML(title)}</h3>
+          <button class="modal-close" type="button" onclick="closeModal()">×</button>
+        </div>
+        ${body}
+      </div>
+    </div>
+  `;
+}
+
+function closeModal() {
+  $("modalRoot").innerHTML = "";
+}
+
+/* =========================================================
+   34. PAGE PRINT / ACCESSIBILITY HELPERS
+   ========================================================= */
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") closeModal();
+});
+
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "hidden" && db) saveDatabase();
+});
+
+window.addEventListener("beforeunload", () => {
+  if (db) saveDatabase();
+});
+
+/* =========================================================
+   35. APPLICATION STARTUP
+   ========================================================= */
+function startup() {
+  loadDatabase();
+  restoreTheme();
+
+  if (!db.setupComplete || !db.admin) {
+    showFirstRunSetup();
+    return;
+  }
+
+  restoreSession();
+}
+
+
+/* =========================================================
+   BILIMHUB PROFESSIONAL EXTENSION — DIRECTOR / TEACHER ADMINS
+   JSON file persistence (File System Access API)
+   ========================================================= */
+let bhJsonHandle = null;
+let bhWriteQueue = Promise.resolve();
+let bhJsonConnected = false;
+let bhLastWriteError = false;
+
+function bhEnsureSchema(){
+  if(!Array.isArray(db.teacherAdmins)) db.teacherAdmins=[];
+  if(!Array.isArray(db.auditLog)) db.auditLog=[];
+  if(!Array.isArray(db.categories)) db.categories=[];
+  if(!Array.isArray(db.certificates)) db.certificates=[];
+  if(!db.admin && db.director) db.admin=db.director;
+  if(db.admin) db.admin.role='director';
+  db.teacherAdmins.forEach(a=>{ if(!a.status)a.status='active'; a.role='teacherAdmin'; });
+  if(!db.version || db.version<4) db.version=4;
+}
+
+function bhAudit(action, detail=''){
+  if(!db.auditLog) db.auditLog=[];
+  db.auditLog.unshift({id:randomId('log'),action,detail,actor:currentUser?.name||'Tizim',date:nowISO()});
+  db.auditLog=db.auditLog.slice(0,1000);
+}
+
+function isAdmin(){return Boolean(currentUser && ['admin','director','teacherAdmin'].includes(currentUser.role));}
+function isDirector(){return Boolean(currentUser && (currentUser.role==='admin'||currentUser.role==='director'));}
+function requireAdmin(){if(!isAdmin()){showToast('Bu amal faqat administrator uchun.','error');return false;}return true;}
+function requireDirector(){if(!isDirector()){showToast('Bu amal faqat direktor uchun.','error');return false;}return true;}
+function getCurrentUser(){
+  if(!currentUser)return null;
+  if(['admin','director'].includes(currentUser.role))return currentUser;
+  if(currentUser.role==='teacherAdmin')return db.teacherAdmins.find(a=>a.id===currentUser.id)||null;
+  return db.users.find(u=>u.id===currentUser.id)||null;
+}
+
+function saveDatabase(){
+  if(!db)return false;
+  try{
+    db.updatedAt=nowISO(); lastSavedAt=db.updatedAt;
+    const snapshot=JSON.stringify(db,null,2);
+    try{localStorage.setItem(STORAGE_KEY,snapshot);}catch(e){}
+    if(bhJsonHandle){
+      bhWriteQueue=bhWriteQueue.then(async()=>{
+        const writable=await bhJsonHandle.createWritable();
+        await writable.write(snapshot); await writable.close();
+        bhLastWriteError=false; bhSetStorageStatus('JSON faylga saqlandi','green');
+      }).catch(err=>{bhLastWriteError=true;bhSetStorageStatus('JSON faylga saqlashda xatolik','red');console.error(err);});
+    }
+    return true;
+  }catch(error){showToast('Saqlashda xatolik yuz berdi.','error');return false;}
+}
+
+function bhSetStorageStatus(message,kind=''){
+  const el=document.getElementById('bhStorageStatus');
+  if(el){el.textContent=message;el.className='pill '+(kind||'');} const backup=document.getElementById('bhBackupStatus'); if(backup){backup.textContent=message;backup.className='pill '+(kind||'');}
+}
+
+async function bhReadHandle(handle){
+  const file=await handle.getFile();
+  const raw=await file.text();
+  if(!raw.trim())return null;
+  const parsed=JSON.parse(raw);
+  return parsed.database && parsed.product==='BILIMHUB' ? parsed.database : parsed;
+}
+
+async function connectBilimHubJSON(){
+  if(!('showOpenFilePicker' in window) || !window.isSecureContext){
+    bhShowFallback(); return;
+  }
+  try{
+    const [handle]=await window.showOpenFilePicker({multiple:false,types:[{description:'BILIMHUB JSON ma’lumotlar fayli',accept:{'application/json':['.json']}}]});
+    const imported=await bhReadHandle(handle);
+    if(!imported || !Array.isArray(imported.users))throw new Error('JSON tuzilmasi noto‘g‘ri');
+    bhJsonHandle=handle; db=imported; normalizeDatabase(); bhEnsureSchema(); bhJsonConnected=true;
+    saveDatabase(); refreshApplication();
+    bhSetStorageStatus('Ulangan: '+handle.name,'green');
+    showToast('bilimhub_data.json muvaffaqiyatli ulandi.');
+    if(!db.setupComplete||!db.admin){showFirstRunSetup();}else{closeModal();$('loginTab').classList.remove('hidden');$('registerTab').classList.remove('hidden');showAuthMode('login');}
+  }catch(error){if(error.name!=='AbortError')showToast('JSON fayl ochilmadi: '+error.message,'error');}
+}
+
+async function createBilimHubJSON(){
+  if(!('showSaveFilePicker' in window) || !window.isSecureContext){bhShowFallback();return;}
+  try{
+    const handle=await window.showSaveFilePicker({suggestedName:'bilimhub_data.json',types:[{description:'JSON ma’lumotlar fayli',accept:{'application/json':['.json']}}]});
+    bhJsonHandle=handle; bhJsonConnected=true; bhEnsureSchema();
+    const writable=await handle.createWritable(); await writable.write(JSON.stringify(db,null,2)); await writable.close();
+    bhSetStorageStatus('Ulangan: '+handle.name,'green');
+    showToast('JSON ma’lumotlar fayli yaratildi va ulandi.');
+  }catch(error){if(error.name!=='AbortError')showToast('JSON fayl yaratilmadi: '+error.message,'error');}
+}
+
+function bhShowFallback(){
+  openModal('JSON fayl bilan ishlash',`
+    <div class="notice warning">Brauzeringiz faylga to‘g‘ridan-to‘g‘ri ulanishni qo‘llamayapti. JSON faylni import/eksport orqali almashishingiz mumkin.</div>
+    <div class="field"><label>JSON faylni tanlang</label><input id="bhFallbackFile" type="file" accept=".json,application/json"></div>
+    <button class="btn btn-primary btn-block" onclick="bhImportFallback()">JSON faylni yuklash</button>
+    <button class="btn btn-soft btn-block" style="margin-top:8px" onclick="exportBackup()">Hozirgi bazani JSON qilib yuklab olish</button>`);
+}
+async function bhImportFallback(){
+  const f=$('bhFallbackFile')?.files?.[0];if(!f){showToast('Avval JSON faylni tanlang.','error');return;}
+  try{const x=JSON.parse(await f.text());db=x.database&&x.product==='BILIMHUB'?x.database:x;if(!Array.isArray(db.users))throw Error('Noto‘g‘ri format');normalizeDatabase();bhEnsureSchema();saveDatabase();closeModal();refreshApplication();showToast('JSON ma’lumotlari yuklandi.');}
+  catch(e){showToast('JSON fayl xato: '+e.message,'error');}
+}
+
+function bhInjectStorageControls(){
+  const auth=$('.auth-box');
+  if(auth&&!$('bhAuthStorage')){
+    const wrap=document.createElement('div');wrap.id='bhAuthStorage';wrap.className='card';wrap.style.marginTop='18px';
+    wrap.innerHTML=`<strong>Ma’lumotlar fayli</strong><p class="muted small">Platformani boshqa kompyuterda davom ettirish uchun umumiy JSON faylni ulang.</p><div class="toolbar"><button class="btn btn-soft btn-small" type="button" onclick="connectBilimHubJSON()">JSON faylni ulash</button><button class="btn btn-plain btn-small" type="button" onclick="createBilimHubJSON()">Yangi JSON yaratish</button></div><span id="bhStorageStatus" class="pill">Brauzer xotirasi</span>`;
+    auth.appendChild(wrap);
+  }
+  const backup=$('page-backup');
+  if(backup&&!$('bhBackupConnect')){
+    const card=document.createElement('div');card.id='bhBackupConnect';card.className='card';
+    card.innerHTML=`<h3 class="card-title">Asosiy JSON ma’lumotlar bazasi</h3><p class="muted small">bilimhub_data.json faylini ulang. Barcha o‘zgarishlar shu faylga yoziladi.</p><div class="toolbar"><button class="btn btn-primary" onclick="connectBilimHubJSON()">Mavjud JSON faylni ulash</button><button class="btn btn-soft" onclick="createBilimHubJSON()">Yangi JSON fayl yaratish</button></div><p id="bhBackupStatus" class="pill">Hozircha ulanmagan</p>`;
+    backup.insertBefore(card,backup.firstChild);
+  }
+}
+
+function bhRenderTeacherAdmins(){
+  const host=$('teacherAdminsPanel');if(!host)return;
+  if(!isDirector()){host.innerHTML='';return;}
+  const list=db.teacherAdmins||[];
+  host.innerHTML=`<div class="section-head"><div><h2>O‘qituvchi-adminlar</h2><p>Direktor tomonidan yaratiladigan alohida administrator hisoblari.</p></div><button class="btn btn-primary" onclick="bhOpenTeacherAdminEditor()">+ Admin qo‘shish</button></div>
+  <div class="notice info">O‘qituvchi-adminlar fan, dars, test, o‘quvchi va e’lonlarni boshqaradi. Direktor hisoblari va boshqa adminlarni boshqarish faqat direktorda.</div>
+  ${list.length?`<div class="table-wrap"><table><thead><tr><th>Ism</th><th>Login</th><th>Yaratilgan</th><th>Holat</th><th>Amallar</th></tr></thead><tbody>${list.map(a=>`<tr><td><strong>${escapeHTML(a.name)}</strong></td><td>${escapeHTML(a.username)}</td><td>${formatDate(a.createdAt)}</td><td><span class="pill ${a.status==='blocked'?'red':'green'}">${a.status==='blocked'?'Bloklangan':'Faol'}</span></td><td><button class="btn btn-soft btn-small" onclick="bhOpenTeacherAdminEditor('${a.id}')">Tahrirlash</button> <button class="btn btn-warning btn-small" onclick="bhToggleTeacherAdmin('${a.id}')">${a.status==='blocked'?'Ochish':'Bloklash'}</button> <button class="btn btn-danger btn-small" onclick="bhDeleteTeacherAdmin('${a.id}')">O‘chirish</button></td></tr>`).join('')}</tbody></table></div>`:emptyHTML('♙','Hozircha o‘qituvchi-admin yo‘q.')}`;
+}
+
+function bhOpenTeacherAdminEditor(id=null){
+  if(!requireDirector())return;
+  const a=id?db.teacherAdmins.find(x=>x.id===id):null;
+  openModal(a?'O‘qituvchi-adminni tahrirlash':'Yangi o‘qituvchi-admin',`<form id="bhTeacherForm"><div class="field"><label>Ism va familiya</label><input id="bhTAName" required maxlength="70" value="${escapeHTML(a?.name||'')}"></div><div class="field"><label>Login</label><input id="bhTALogin" required minlength="4" maxlength="40" autocomplete="off" value="${escapeHTML(a?.username||'')}"></div><div class="field"><label>${a?'Yangi parol (o‘zgartirmasangiz bo‘sh qoldiring)':'Parol (kamida 10 belgi)'}</label><input id="bhTAPassword" type="password" ${a?'':'required minlength="10"'} autocomplete="new-password"></div><div class="field"><label>Holat</label><select id="bhTAStatus"><option value="active" ${a?.status!=='blocked'?'selected':''}>Faol</option><option value="blocked" ${a?.status==='blocked'?'selected':''}>Bloklangan</option></select></div><button class="btn btn-primary btn-block">Saqlash</button></form>`);
+  $('bhTeacherForm').addEventListener('submit',async e=>{
+    e.preventDefault();const name=$('bhTAName').value.trim(),username=$('bhTALogin').value.trim().toLowerCase(),password=$('bhTAPassword').value;
+    if(username.length<4)return showToast('Login kamida 4 belgidan iborat bo‘lsin.','error');
+    if(db.admin&&db.admin.username.toLowerCase()===username)return showToast('Bu login direktor tomonidan ishlatilgan.','error');
+    if(db.teacherAdmins.some(x=>x.username.toLowerCase()===username&&x.id!==id))return showToast('Bu login band.','error');
+    if(db.users.some(x=>x.username?.toLowerCase()===username||x.email?.toLowerCase()===username))return showToast('Bu login boshqa hisobda ishlatilgan.','error');
+    if(!a&&password.length<10)return showToast('Parol kamida 10 belgidan iborat bo‘lsin.','error');
+    if(password&&password.length<10)return showToast('Yangi parol kamida 10 belgidan iborat bo‘lsin.','error');
+    const data={name,username,status:$('bhTAStatus').value,role:'teacherAdmin',updatedAt:nowISO()};
+    if(a){Object.assign(a,data);if(password)a.passwordRecord=await hashPassword(password);}
+    else db.teacherAdmins.push({id:randomId('teacher'),...data,passwordRecord:await hashPassword(password),createdAt:nowISO()});
+    bhAudit(a?'O‘qituvchi-admin tahrirlandi':'O‘qituvchi-admin yaratildi',username);saveDatabase();closeModal();bhRenderTeacherAdmins();showToast('O‘qituvchi-admin saqlandi.');
+  });
+}
+function bhToggleTeacherAdmin(id){if(!requireDirector())return;const a=db.teacherAdmins.find(x=>x.id===id);if(!a)return;a.status=a.status==='blocked'?'active':'blocked';bhAudit('Admin holati o‘zgartirildi',a.username+' '+a.status);saveDatabase();bhRenderTeacherAdmins();showToast(a.status==='blocked'?'Admin bloklandi.':'Admin faollashtirildi.');}
+function bhDeleteTeacherAdmin(id){if(!requireDirector())return;const a=db.teacherAdmins.find(x=>x.id===id);if(!a)return;if(!confirmAction(a.username+' hisobini butunlay o‘chirasizmi?'))return;if(currentUser?.id===id)logout();db.teacherAdmins=db.teacherAdmins.filter(x=>x.id!==id);bhAudit('O‘qituvchi-admin o‘chirildi',a.username);saveDatabase();bhRenderTeacherAdmins();showToast('O‘qituvchi-admin o‘chirildi.');}
+
+function renderUsers(){
+  const query=($('userSearch')?.value||'').toLowerCase();
+  const users=db.users.filter(u=>u.name.toLowerCase().includes(query)||u.email.toLowerCase().includes(query));
+  $('usersTable').innerHTML=users.length?`<div class="table-wrap"><table><thead><tr><th>O‘quvchi</th><th>Email</th><th>Sinf</th><th>Ro‘yxatdan o‘tgan</th><th>Natija</th><th>Holat</th><th>Amallar</th></tr></thead><tbody>${users.map(user=>{const results=getUserResults(user.id),average=results.length?Math.round(results.reduce((sum,x)=>sum+x.score,0)/results.length):0;return `<tr><td><strong>${escapeHTML(user.name)}</strong></td><td>${escapeHTML(user.email)}</td><td>${user.grade}-sinf</td><td>${formatDate(user.createdAt)}</td><td>${average}% · ${results.length} test</td><td><span class="pill ${user.status==='blocked'?'red':'green'}">${user.status==='blocked'?'Bloklangan':'Faol'}</span></td><td><button class="btn btn-soft btn-small" onclick="viewStudent(${user.id})">Ko‘rish</button> <button class="btn btn-warning btn-small" onclick="toggleUserBlock(${user.id})">${user.status==='blocked'?'Ochish':'Bloklash'}</button> <button class="btn btn-danger btn-small" onclick="deleteUser(${user.id})">O‘chirish</button></td></tr>`;}).join('')}</tbody></table></div>`:emptyHTML('👥','O‘quvchilar topilmadi.');
+  bhRenderTeacherAdmins();
+}
+
+function bhAttachUI(){
+  const usersPage=$('page-manageUsers');
+  if(usersPage&&!$('teacherAdminsPanel')){const panel=document.createElement('div');panel.id='teacherAdminsPanel';panel.className='card';panel.style.marginTop='24px';usersPage.appendChild(panel);}
+  const settings=$('page-settings');
+  if(settings&&!$('bhDirectorSettings')){
+    const card=document.createElement('div');card.id='bhDirectorSettings';card.className='card';card.innerHTML=`<h3 class="card-title">Direktor hisobini boshqarish</h3><p class="muted small">Direktor loginini va parolini yangilash.</p><form id="bhDirectorForm"><div class="form-grid"><div class="field"><label>Yangi direktor logini</label><input id="bhDirectorLogin" required minlength="4" maxlength="40"></div><div class="field"><label>Joriy parol</label><input id="bhDirectorOld" type="password" required></div><div class="field"><label>Yangi parol (ixtiyoriy)</label><input id="bhDirectorNew" type="password" minlength="10"></div></div><button class="btn btn-warning">Direktor ma’lumotlarini yangilash</button></form>`;
+    settings.appendChild(card); $('bhDirectorLogin').value=db.admin?.username||'';
+    $('bhDirectorForm').addEventListener('submit',async e=>{e.preventDefault();if(!requireDirector())return;const login=$('bhDirectorLogin').value.trim().toLowerCase(),old=$('bhDirectorOld').value,nw=$('bhDirectorNew').value;if(login.length<4)return showToast('Login kamida 4 belgi.','error');if(db.teacherAdmins.some(a=>a.username.toLowerCase()===login))return showToast('Bu login admin hisobida band.','error');if(!(await verifyPassword(old,db.admin.passwordRecord)))return showToast('Joriy parol noto‘g‘ri.','error');db.admin.username=login;if(nw){if(nw.length<10)return showToast('Yangi parol kamida 10 belgi.','error');db.admin.passwordRecord=await hashPassword(nw);}currentUser.username=login;saveDatabase();$('bhDirectorForm').reset();$('bhDirectorLogin').value=login;showToast('Direktor hisobi yangilandi.');});
+  }
+  const loginForm=$('loginForm');
+  if(loginForm&&!loginForm.dataset.bhEnhanced){loginForm.dataset.bhEnhanced='1';document.addEventListener('submit',async e=>{if(e.target!==loginForm)return;const identity=$('loginIdentity').value.trim().toLowerCase();const ta=db.teacherAdmins?.find(a=>a.username.toLowerCase()===identity);if(!ta)return;e.preventDefault();e.stopImmediatePropagation();if(ta.status==='blocked')return showToast('Bu administrator hisobi bloklangan.','error');const ok=await verifyPassword($('loginPassword').value,ta.passwordRecord);if(!ok)return showToast('Login yoki parol noto‘g‘ri.','error');enterApplication({id:ta.id,username:ta.username,name:ta.name,role:'teacherAdmin'});},true);}
+}
+
+function enterApplication(user){
+  currentUser=user;
+  const adminRole=['admin','director','teacherAdmin'].includes(user.role);
+  sessionStorage.setItem(SESSION_KEY,adminRole?(user.role==='teacherAdmin'?'teacher:'+user.id:'admin'):String(user.id));
+  $('authScreen').classList.add('hidden');$('appScreen').classList.remove('hidden');
+  $('topName').textContent=user.name||user.username;
+  $('topRole').textContent=user.role==='teacherAdmin'?'O‘qituvchi-admin':adminRole?'Direktor':' '+user.grade+'-sinf o‘quvchisi';
+  $('topAvatar').textContent=initials(user.name||user.username);$('welcomeHeading').textContent='Xush kelibsiz, '+(user.name||user.username)+'!';
+  $('adminNavigation').classList.toggle('hidden',!adminRole);
+  const directorPasswordCard=$('changeAdminPasswordForm')?.closest('.card'); if(directorPasswordCard)directorPasswordCard.classList.toggle('hidden',!isDirector());
+  const directorSettings=$('bhDirectorSettings'); if(directorSettings)directorSettings.classList.toggle('hidden',!isDirector());
+  document.querySelectorAll('#adminNavigation .nav-btn').forEach(btn=>{if(btn.dataset.page==='manageUsers'&& !isDirector())btn.style.display='';});
+  if(user.role==='student'){const stored=db.users.find(x=>x.id===user.id);if(stored)stored.lastActive=nowISO();}
+  refreshApplication();navigate(adminRole?'adminDashboard':'dashboard');
+}
+
+function restoreSession(){
+  const saved=sessionStorage.getItem(SESSION_KEY);if(!saved)return;
+  if(saved==='admin'&&db.admin){enterApplication({id:'admin',username:db.admin.username,name:db.admin.name,role:'admin'});return;}
+  if(saved.startsWith('teacher:')){const id=saved.slice(8),a=db.teacherAdmins.find(x=>x.id===id&&x.status!=='blocked');if(a){enterApplication({...a,role:'teacherAdmin'});return;}}
+  const user=db.users.find(x=>String(x.id)===saved);if(user&&user.status!=='blocked')enterApplication(user);
+}
+
+function bhEnhancedStartup(){
+  loadDatabase();bhEnsureSchema();restoreTheme();bhAttachUI();bhInjectStorageControls();
+  if(!db.setupComplete||!db.admin){showFirstRunSetup();return;}
+  restoreSession();
+}
+
+bhEnhancedStartup();
+
+/* =========================================================
+   36. ADDITIONAL VALIDATION AND MAINTENANCE HELPERS
+   ========================================================= */
+function validateDatabaseShape() {
+  const requiredArrays = [
+    "users",
+    "subjects",
+    "lessons",
+    "quizzes",
+    "results",
+    "announcements"
+  ];
+
+  return requiredArrays.every((key) => Array.isArray(db[key]));
+}
+
+function getDatabaseSummary() {
+  return {
+    users: db.users.length,
+    subjects: db.subjects.length,
+    lessons: db.lessons.length,
+    quizzes: db.quizzes.length,
+    results: db.results.length,
+    announcements: db.announcements.length
+  };
+}
+
+function normalizeText(text) {
+  return String(text || "")
+    .normalize("NFKC")
+    .trim()
+    .toLocaleLowerCase("uz-UZ");
+}
+
+function sortByNewest(items, key = "createdAt") {
+  return items.slice().sort((a, b) =>
+    String(b[key] || "").localeCompare(String(a[key] || ""))
+  );
+}
+
+function countPublishedLessons(subjectId) {
+  return db.lessons.filter((lesson) =>
+    lesson.subjectId === subjectId &&
+    lesson.published !== false
+  ).length;
+}
+
+function countActiveStudents() {
+  return db.users.filter((user) => user.status !== "blocked").length;
+}
+
+function countBlockedStudents() {
+  return db.users.filter((user) => user.status === "blocked").length;
+}
+
+function calculateAverageScore(results) {
+  if (!results.length) return 0;
+  return Math.round(
+    results.reduce((total, result) => total + Number(result.score || 0), 0) /
+    results.length
+  );
+}
+
+function getStudentRank(userId) {
+  const rows = db.users.map((user) => {
+    const results = getUserResults(user.id);
+    const score = results.reduce((total, result) => total + result.score, 0);
+    const lessonPoints = (user.completedLessons || []).length * 10;
+    return {
+      userId: user.id,
+      points: score + lessonPoints
+    };
+  }).sort((a, b) => b.points - a.points);
+
+  return rows.findIndex((row) => row.userId === userId) + 1;
+}
+
+function createSafeFilename(name) {
+  return String(name || "file")
+    .replace(/[\\/:*?"<>|]/g, "_")
+    .replace(/\s+/g, "_")
+    .slice(0, 80);
+}
+
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || ""));
+}
+
+function isValidGrade(grade) {
+  return [5, 6, 7, 8, 9, 10, 11].includes(Number(grade));
+}
+
+function clampNumber(value, min, max) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) return min;
+  return Math.min(max, Math.max(min, number));
+}
+
+/* =========================================================
+   37. STUDENT PROFILE EXTENSIONS
+   ========================================================= */
+function showMyAccountInfo() {
+  if (!currentUser || isAdmin()) return;
+  const user = getUserProgress(currentUser.id);
+  const rank = getStudentRank(currentUser.id);
+  openModal("Mening hisobim", `
+    <div class="card">
+      <p><strong>Ism:</strong> ${escapeHTML(user.name)}</p>
+      <p><strong>Email:</strong> ${escapeHTML(user.email)}</p>
+      <p><strong>Sinf:</strong> ${user.grade}-sinf</p>
+      <p><strong>Platformadagi o'rin:</strong> ${rank || "—"}</p>
+      <p><strong>Ro'yxatdan o'tgan:</strong> ${formatDate(user.createdAt)}</p>
+    </div>
+    <form id="studentProfileForm">
+      <div class="field"><label>Ism va familiya</label><input id="studentNewName" required value="${escapeHTML(user.name)}"></div>
+      <button class="btn btn-primary btn-block">Profilni yangilash</button>
+    </form>
+  `);
+
+  $("studentProfileForm").addEventListener("submit", (event) => {
+    event.preventDefault();
+    const name = $("studentNewName").value.trim();
+    if (name.length < 2) return;
+    user.name = name;
+    currentUser.name = name;
+    saveDatabase();
+    $("topName").textContent = name;
+    $("topAvatar").textContent = initials(name);
+    closeModal();
+    showToast("Profil yangilandi.");
+  });
+}
+
+/* =========================================================
+   38. STUDENT PASSWORD CHANGE
+   ========================================================= */
+function openStudentPasswordChange() {
+  if (!currentUser || isAdmin()) return;
+  const user = getUserProgress(currentUser.id);
+
+  openModal("Parolni o'zgartirish", `
+    <form id="studentPasswordForm">
+      <div class="field"><label>Joriy parol</label><input id="studentOldPassword" type="password" required></div>
+      <div class="field"><label>Yangi parol</label><input id="studentNewPassword" type="password" minlength="8" required></div>
+      <div class="field"><label>Yangi parolni tasdiqlang</label><input id="studentConfirmPassword" type="password" minlength="8" required></div>
+      <button class="btn btn-primary btn-block">Parolni yangilash</button>
+    </form>
+  `);
+
+  $("studentPasswordForm").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const oldPassword = $("studentOldPassword").value;
+    const newPassword = $("studentNewPassword").value;
+    const confirm = $("studentConfirmPassword").value;
+
+    if (!(await verifyPassword(oldPassword, user.passwordRecord))) {
+      showToast("Joriy parol noto'g'ri.", "error");
+      return;
+    }
+    if (newPassword.length < 8 || newPassword !== confirm) {
+      showToast("Yangi parolni tekshiring.", "error");
+      return;
+    }
+
+    user.passwordRecord = await hashPassword(newPassword);
+    saveDatabase();
+    closeModal();
+    showToast("Parol yangilandi.");
+  });
+}
+
+/* =========================================================
+   39. RANKING VIEW
+   ========================================================= */
+function buildRankingRows() {
+  return db.users.map((user) => {
+    const results = getUserResults(user.id);
+    const testPoints = results.reduce((sum, result) => sum + result.score, 0);
+    const lessonPoints = (user.completedLessons || []).length * 10;
+    return {
+      id: user.id,
+      name: user.name,
+      grade: user.grade,
+      points: testPoints + lessonPoints,
+      average: calculateAverageScore(results)
+    };
+  }).sort((a, b) => b.points - a.points);
+}
+
+function renderRankingTable() {
+  const ranking = buildRankingRows();
+  return ranking.length
+    ? `<div class="table-wrap"><table><thead><tr><th>O'rin</th><th>O'quvchi</th><th>Sinf</th><th>Ball</th><th>O'rtacha</th></tr></thead><tbody>${ranking.map((row, index) => `
+        <tr><td>${index + 1}</td><td>${escapeHTML(row.name)}</td><td>${row.grade}-sinf</td><td>${row.points}</td><td>${row.average}%</td></tr>
+      `).join("")}</tbody></table></div>`
+    : emptyHTML("🏆", "Reyting uchun ma'lumot yo'q.");
+}
+
+/* =========================================================
+   40. FINAL CONSISTENCY CHECKS
+   ========================================================= */
+function checkBrokenReferences() {
+  const subjectIds = new Set(db.subjects.map((subject) => subject.id));
+  db.lessons = db.lessons.filter((lesson) => subjectIds.has(lesson.subjectId));
+  db.quizzes = db.quizzes.filter((quiz) => subjectIds.has(quiz.subjectId));
+  db.users.forEach((user) => {
+    user.completedLessons = (user.completedLessons || []).filter((id) =>
+      db.lessons.some((lesson) => lesson.id === id)
+    );
+    user.favorites = (user.favorites || []).filter((id) =>
+      db.lessons.some((lesson) => lesson.id === id)
+    );
+  });
+}
+
+checkBrokenReferences();
+saveDatabase();
+
+/* =========================================================
+   BILIMHUB SINGLE-FILE EDITION — END
+   ========================================================= */
+
+
+/* =========================================================
+   BILIMHUB V5 — STORAGE, GRADES, DIRECTOR IMPROVEMENTS
+   Mavjud kodning oxiriga qo'shiladi.
+   ========================================================= */
+
+const BH_VERSION = 5;
+let bhDirectoryHandle = null;
+let bhStorageFileHandle = null;
+let bhStorageQueue = Promise.resolve();
+
+/* 1. Barcha 5–11 sinflar uchun fanlarni tayyorlash */
+function bhSeedAllGrades() {
+  const subjects = [
+    "Matematika",
+    "Ona tili",
+    "Adabiyot",
+    "Ingliz tili",
+    "Tarix",
+    "Geografiya",
+    "Biologiya",
+    "Fizika",
+    "Kimyo",
+    "Informatika"
+  ];
+
+  for (let grade = 5; grade <= 11; grade++) {
+    subjects.forEach((name, index) => {
+      const exists = db.subjects.some(subject =>
+        Number(subject.grade) === grade &&
+        normalizeText(subject.name) === normalizeText(name)
+      );
+
+      if (!exists) {
+        db.subjects.push({
+          id: nextId(),
+          name,
+          grade,
+          description:
+            `${grade}-sinf uchun ${name} fanidan o'quv materiallari.`,
+          icon: SUBJECT_ICONS[name] || "📘",
+          color: "#6258e8",
+          active: true,
+          order: index,
+          createdAt: nowISO()
+        });
+      }
+    });
+  }
+}
+
+/* 2. Storage papkasini yaratish va ulash */
+async function bhConnectStorage() {
+  if (!window.showDirectoryPicker) {
+    showToast(
+      "Brauzer papka tanlash imkoniyatini qo'llamaydi. JSON eksport/importdan foydalaning.",
+      "error"
+    );
+    return;
+  }
+
+  try {
+    const root = await window.showDirectoryPicker({
+      id: "bilimhub-folder",
+      mode: "readwrite"
+    });
+
+    // Foydalanuvchi tanlagan papka ichida storage yaratiladi.
+    const storage = await root.getDirectoryHandle("storage", {
+      create: true
+    });
+
+    const file = await storage.getFileHandle(
+      "bilimhub_data.json",
+      { create: true }
+    );
+
+    bhDirectoryHandle = storage;
+    bhStorageFileHandle = file;
+
+    const savedFile = await file.getFile();
+
+    if (savedFile.size > 0) {
+      const raw = await savedFile.text();
+      const imported = JSON.parse(raw);
+      const candidate = imported.database || imported;
+
+      if (
+        candidate &&
+        Array.isArray(candidate.users) &&
+        Array.isArray(candidate.subjects)
+      ) {
+        if (confirm(
+          "Storage ichida avvalgi ma'lumotlar topildi. " +
+          "Ularni yuklashni xohlaysizmi?"
+        )) {
+          db = candidate;
+          normalizeDatabase();
+          bhEnsureSchema();
+          bhSeedAllGrades();
+        }
+      }
+    }
+
+    await bhSaveToStorage();
+
+    bhSetStorageStatus(
+      "storage/bilimhub_data.json ulandi",
+      "green"
+    );
+
+    showToast("Storage papkasi yaratildi va ulandi.");
+    refreshApplication();
+
+  } catch (error) {
+    if (error.name !== "AbortError") {
+      console.error(error);
+      showToast(
+        "Storage ulanishida xatolik: " + error.message,
+        "error"
+      );
+    }
+  }
+}
+
+/* 3. JSON faylga xavfsiz saqlash */
+async function bhSaveToStorage() {
+  if (!bhStorageFileHandle || !db) return false;
+
+  try {
+    const snapshot = JSON.stringify(db, null, 2);
+
+    const writable =
+      await bhStorageFileHandle.createWritable();
+
+    await writable.write(snapshot);
+    await writable.close();
+
+    bhSetStorageStatus("Ma'lumotlar saqlandi", "green");
+    return true;
+
+  } catch (error) {
+    console.error(error);
+    bhSetStorageStatus("Saqlashda xatolik", "red");
+    return false;
+  }
+}
+
+/* 4. Asosiy saqlash funksiyasini yangilash */
+saveDatabase = function() {
+  if (!db) return false;
+
+  try {
+    db.updatedAt = nowISO();
+    lastSavedAt = db.updatedAt;
+
+    const snapshot = JSON.stringify(db);
+
+    try {
+      localStorage.setItem(STORAGE_KEY, snapshot);
+    } catch (error) {
+      console.warn("LocalStorage saqlashi amalga oshmadi.", error);
+    }
+
+    if (bhStorageFileHandle) {
+      bhStorageQueue = bhStorageQueue
+        .then(() => bhSaveToStorage())
+        .catch(error => {
+          console.error("Storage queue:", error);
+        });
+    }
+
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
+
+/* 5. Storage boshqaruv tugmalari */
+function bhAddStorageControls() {
+  const auth = document.querySelector(".auth-box");
+
+  if (auth && !document.getElementById("bhStorageConnect")) {
+    const card = document.createElement("div");
+
+    card.id = "bhStorageConnect";
+    card.className = "card";
+    card.style.marginTop = "18px";
+
+    card.innerHTML = `
+      <h3 class="card-title">Ma'lumotlar bazasi</h3>
+      <p class="muted small">
+        BilimHUB ma'lumotlarini kompyuteringizdagi
+        storage papkasida saqlang.
+      </p>
+      <button class="btn btn-soft btn-block"
+        type="button"
+        onclick="bhConnectStorage()">
+        📁 Storage papkasini yaratish / ulash
+      </button>
+      <p id="bhStorageStatus" class="small muted">
+        Storage hali ulanmagan
+      </p>
+    `;
+
+    auth.appendChild(card);
+  }
+
+  const backup = document.getElementById("page-backup");
+
+  if (backup && !document.getElementById("bhStorageBackup")) {
+    const card = document.createElement("div");
+
+    card.id = "bhStorageBackup";
+    card.className = "card";
+
+    card.innerHTML = `
+      <h3 class="card-title">Storage boshqaruvi</h3>
+      <p class="muted small">
+        Barcha ma'lumotlarni alohida papkada saqlash.
+      </p>
+      <button class="btn btn-primary"
+        onclick="bhConnectStorage()">
+        📁 Storage papkasini ulash
+      </button>
+      <button class="btn btn-soft"
+        onclick="exportBackup()">
+        JSON zaxira olish
+      </button>
+      <p id="bhBackupStatus" class="muted small">
+        Storage ulanmagan
+      </p>
+    `;
+
+    backup.insertBefore(card, backup.firstChild);
+  }
+}
+
+/* 6. Storage holatini ko'rsatish */
+bhSetStorageStatus = function(message, kind = "") {
+  ["bhStorageStatus", "bhBackupStatus"].forEach(id => {
+    const element = document.getElementById(id);
+
+    if (element) {
+      element.textContent = message;
+      element.className = "pill " + kind;
+    }
+  });
+};
+
+/* 7. Direktor uchun boshlang'ich hisob */
+async function bhEnsureDirector() {
+  if (db.admin && db.admin.passwordRecord) {
+    db.admin.role = "director";
+    db.setupComplete = true;
+    return;
+  }
+
+  const passwordRecord =
+    await hashPassword("BHub-Start2026!");
+
+  db.admin = {
+    id: "admin",
+    name: "BILIMHUB Direktor",
+    username: "direktor",
+    passwordRecord,
+    role: "director",
+    createdAt: nowISO()
+  };
+
+  db.setupComplete = true;
+  bhAudit("Direktor hisobi tayyorlandi");
+  saveDatabase();
+
+  closeModal();
+  document.getElementById("loginTab")
+    ?.classList.remove("hidden");
+  document.getElementById("registerTab")
+    ?.classList.remove("hidden");
+
+  showAuthMode("login");
+}
+
+/* 8. Login oynasida direktor parolini ko'rsatmaslik */
+function bhHideAdminCredentials() {
+  const login = document.getElementById("loginIdentity");
+  const password = document.getElementById("loginPassword");
+
+  if (login) {
+    login.value = "";
+    login.placeholder = "Login yoki email";
+  }
+
+  if (password) {
+    password.value = "";
+    password.placeholder = "Parolingiz";
+  }
+}
+
+/* 9. Faollikni kuzatish */
+function bhTrackActivity() {
+  if (!currentUser) return;
+
+  if (currentUser.role === "student") {
+    const user = db.users.find(
+      item => item.id === currentUser.id
+    );
+
+    if (user) {
+      user.lastActive = nowISO();
+      saveDatabase();
+    }
+  }
+
+  bhAudit("Faollik", "Platformadan foydalanildi");
+}
+
+/* 10. Yakuniy ishga tushirish */
+async function bhFinalUpgrade() {
+  bhEnsureSchema();
+
+  bhSeedAllGrades();
+
+  await bhEnsureDirector();
+
+  bhAddStorageControls();
+
+  bhHideAdminCredentials();
+
+  saveDatabase();
+
+  if (currentUser) {
+    refreshApplication();
+  }
+
+  console.log("BILIMHUB V5 ishga tushdi.");
+  console.log("Sinf oralig'i: 5–11");
+  console.log("Storage: foydalanuvchi ruxsati bilan ulanadi.");
+}
+
+bhFinalUpgrade();
+
+</script>
+</body>
+</html>
